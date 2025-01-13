@@ -141,6 +141,7 @@ void showMenuEstoque(){
     } while (choice != 'S');
 }
 //Adicionado comentario
+//Segundo comentario
 void showMenu() {
     // system("clear"); // Limpa o terminal no Windows
     cout << "=====================================\n";
