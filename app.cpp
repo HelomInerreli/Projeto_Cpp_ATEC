@@ -112,7 +112,7 @@ void teste(string** mat){
     mat[linha][2] = modificarStock(mat[linha][2], 5);
 }
 
-void prePreencherMatriz(string** mProd){
+void prePreencherMatriz(string** mProd,string** mVendas){
     mProd[0][0] = "1"; //Coluna ID
     mProd[0][1] = "Arroz Continente"; //Coluna Descrição
     mProd[0][2] = "10"; //Coluna Quantidade
@@ -138,6 +138,30 @@ void prePreencherMatriz(string** mProd){
     mProd[4][2] = "42"; //Coluna Quantidade
     mProd[4][3] = "1"; //Coluna Custo 
 
+    mVendas[0][0] = 
+    mVendas[0][1] = 
+    mVendas[0][2] = 
+    mVendas[0][3] = 
+
+    mVendas[1][0] =
+    mVendas[1][1] = 
+    mVendas[1][2] = 
+    mVendas[1][3] = 
+
+    mVendas[2][0] =
+    mVendas[2][1] = 
+    mVendas[2][2] = 
+    mVendas[2][3] = 
+
+    mVendas[3][0] =
+    mVendas[3][1] = 
+    mVendas[3][2] = 
+    mVendas[3][3] = 
+
+    mVendas[4][0] =
+    mVendas[4][1] = 
+    mVendas[4][2] = 
+    mVendas[4][3] = 
 }
 
 void showMenuVendas(){
@@ -209,6 +233,8 @@ void showMenu() {
     cout << "Escolha uma opção: ";
 }
 
+float validNum(string valor){}  // funcao de validação POR TERMINAR
+
 int main() {
     setlocale(LC_ALL, ""); //mudar charset para utf-8
     char choice;
@@ -216,8 +242,12 @@ int main() {
     for (int i = 0; i < 5; i++) {
         mProd[i] = new string[4];
     }
+    string** mVendas = new string*[5];
+    for (int i = 0; i < 5; i++) {
+        mVendas[i] = new string[4];
+    }
 
-    prePreencherMatriz(mProd);
+    prePreencherMatriz(mProd,mVendas);
 
     do {
         showMenu();
