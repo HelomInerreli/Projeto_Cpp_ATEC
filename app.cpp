@@ -143,7 +143,7 @@ void showMenuEstoque(){
 //Adicionado comentario
 //Segundo comentario
 void showMenu() {
-    // system("clear"); // Limpa o terminal no Windows
+    system("clear"); // Limpa o terminal no Windows
     cout << "=====================================\n";
     cout << "          BEM-VINDO AO MENU          \n";
     cout << "=====================================\n";
