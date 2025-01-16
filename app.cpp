@@ -164,7 +164,8 @@ void prePreencherMatriz(string** mProd,string** mVendas){
     mVendas[4][3] = "69.54"; // total venda
 }
 
-void showMenuVendas(){
+void showMenuVendas(string** mat1){
+    char choice;
     system("clear"); // Limpa o terminal no Windows
     cout << "=====================================\n";
     cout << "          BEM-VINDO AO MENU DE VENDAS          \n";
@@ -172,10 +173,13 @@ void showMenuVendas(){
     cout << "V. Vender\n";
     cout << "C. Consultar Produtos\n";
     cout << "S. Sair\n";
+    impMatriz(mat1, 5,4);
     cout << endl;
     cout << getDateTime() << "\n";
     cout << "=====================================\n";
     cout << "Escolha uma opção: ";
+    cin >> choice;
+    choice = toupper(choice);
 }
 
 
@@ -264,6 +268,7 @@ int main() {
                 break;
             case 'V':
                 cout << "Carregando Vendas...\n";
+                showMenuVendas(mVendas);
                 break;
             case 'C':
                 cout << "Abrindo Compras...\n";
