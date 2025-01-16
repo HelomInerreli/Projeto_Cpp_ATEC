@@ -137,31 +137,31 @@ void prePreencherMatriz(string** mProd,string** mVendas){
     mProd[4][1] = "Arroz Pingo Doce"; //Coluna Descrição
     mProd[4][2] = "42"; //Coluna Quantidade
     mProd[4][3] = "1"; //Coluna Custo 
+//------------------------------------------------------
+    mVendas[0][0] = "1"; // id venda
+    mVendas[0][1] = "14h41"; //Hora da venda
+    mVendas[0][2] = "7"; // nº cliente
+    mVendas[0][3] = "56.40€"; // total venda
 
-    mVendas[0][0] = 
-    mVendas[0][1] = 
-    mVendas[0][2] = 
-    mVendas[0][3] = 
+    mVendas[1][0] = "2"; // Coluna ID
+    mVendas[1][1] = "16h02"; // Hora da venda
+    mVendas[1][2] = "25";// nº cliente
+    mVendas[1][3] = "26.72€"; // total venda
 
-    mVendas[1][0] =
-    mVendas[1][1] = 
-    mVendas[1][2] = 
-    mVendas[1][3] = 
+    mVendas[2][0] = "3";//Coluna ID
+    mVendas[2][1] = "18h17"; // Hora da venda
+    mVendas[2][2] = "32";// nº cliente
+    mVendas[2][3] = "78.32€"; // total venda
 
-    mVendas[2][0] =
-    mVendas[2][1] = 
-    mVendas[2][2] = 
-    mVendas[2][3] = 
+    mVendas[3][0] = "4";//Coluna ID
+    mVendas[3][1] = "19h07"; // Hora da venda
+    mVendas[3][2] = "55";// nº cliente
+    mVendas[3][3] = "7.77€"; // total venda
 
-    mVendas[3][0] =
-    mVendas[3][1] = 
-    mVendas[3][2] = 
-    mVendas[3][3] = 
-
-    mVendas[4][0] =
-    mVendas[4][1] = 
-    mVendas[4][2] = 
-    mVendas[4][3] = 
+    mVendas[4][0] = "5"; //Coluna ID
+    mVendas[4][1] = "10h16"; // Hora da venda
+    mVendas[4][2] = "7"; // nº cliente
+    mVendas[4][3] = "69.54"; // total venda
 }
 
 void showMenuVendas(){
@@ -233,7 +233,9 @@ void showMenu() {
     cout << "Escolha uma opção: ";
 }
 
-float validNum(string valor){}  // funcao de validação POR TERMINAR
+float validNum(string valor){ // funcao de validação POR TERMINAR
+    
+} 
 
 int main() {
     setlocale(LC_ALL, ""); //mudar charset para utf-8
