@@ -2,6 +2,7 @@
 #include <string>
 #include <ctime>
 #include <locale> // biblioteca para mudar charset para UTF-8
+#include <cctype> //biblioteca para a função de validação std::isdigit(c)
 
 using namespace std;
 
@@ -237,9 +238,16 @@ void showMenu() {
     cout << "Escolha uma opção: ";
 }
 
-float validNum(string valor){ // funcao de validação POR TERMINAR
+bool validNum(string valor){ // funcao de validação de input
     
-} 
+    for (char c : valor) {
+        if (!std::isdigit(c)) {
+            return false;
+        }
+    }
+    return true;
+}
+
 
 int main() {
     setlocale(LC_ALL, ""); //mudar charset para utf-8
@@ -258,8 +266,7 @@ int main() {
     do {
         showMenu();
         cin >> choice;
-        //Coloca a opção em maiúsculo
-        choice = toupper(choice);
+        choice = toupper(choice);//Coloca a opção em maiúsculo
 
         switch (choice) {
             case 'E':
