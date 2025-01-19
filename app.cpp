@@ -6,11 +6,11 @@
 using namespace std;
 
 //Funcao para imprimir a matriz
-void impMatriz(int** mat, int l, int c) {
+void impMatriz(string** mat, int l, int c) {
     // Imprimir a borda superior
     cout << "+";
     for (int j = 0; j < c; j++)
-        cout << "-------+";
+        cout << "---------------------";
     cout << endl;
 
     // Imprimir as linhas da matriz
@@ -24,7 +24,7 @@ void impMatriz(int** mat, int l, int c) {
         // Imprimir a borda entre as linhas
         cout << "+";
         for (int j = 0; j < c; j++)
-            cout << "-------+";
+            cout << "--------------------";
         cout << endl;
     }
 }
@@ -37,7 +37,7 @@ void lerMatriz(int** mat, int l, int c) {
             cin >> mat[i][ii];
         }
     }
-    cout << "------------------------------" << endl;
+    cout << "---------------------------------------------  ------------" << endl;
 }
 
 //Funcao para inserir uma nova linha na matriz
@@ -93,7 +93,101 @@ string getDateTime() {
     return dateTime;
 }
 
-void showMenuVendas(){
+string modificarStock(string valorAtual, float valorNovo){
+    return to_string(stof(valorAtual) + valorNovo);
+}
+
+void aumentarLinhas(int**& matriz, int& linhas, int colunas, int novasLinhas) {
+    // Criar uma nova matriz com o número total de linhas aumentadas
+    int** novaMatriz = new int*[linhas + novasLinhas];
+    
+    // Copiar os dados da matriz antiga para a nova matriz
+    for (int i = 0; i < linhas; i++) {
+        novaMatriz[i] = matriz[i];
+    }
+    
+    // Alocar memória para as novas linhas
+    for (int i = linhas; i < linhas + novasLinhas; i++) {
+        novaMatriz[i] = new int[colunas](); // Inicializa com 0
+    }
+    
+    // Liberar a matriz antiga sem liberar as linhas
+    delete[] matriz;
+
+    // Atualizar a matriz e o número de linhas
+    matriz = novaMatriz;
+    linhas += novasLinhas;
+}
+
+int pesquisarID(int id, string** matriz, int linha){
+    for (int i = 0; i < linha; i++)
+    {
+        if (stoi(matriz[i][0]) == id){
+            return i;
+        }
+    }
+}
+
+void teste(string** mat){
+    int linha = pesquisarID(3, mat, 5);
+
+    mat[linha][2] = modificarStock(mat[linha][2], 5);
+}
+
+void prePreencherMatriz(string** mProd,string** mVendas){
+    mProd[0][0] = "1"; //Coluna ID
+    mProd[0][1] = "Arroz Continente"; //Coluna Descrição
+    mProd[0][2] = "10"; //Coluna Quantidade
+    mProd[0][3] = "2"; //Coluna Custo
+
+    mProd[1][0] = "2"; //Coluna ID
+    mProd[1][1] = "Massa Espaguete"; //Coluna Descrição
+    mProd[1][2] = "15"; //Coluna Quantidade
+    mProd[1][3] = "0.80"; //Coluna Custo
+
+    mProd[2][0] = "3"; //Coluna ID
+    mProd[2][1] = "Salsicha"; //Coluna Descrição
+    mProd[2][2] = "3"; //Coluna Quantidade
+    mProd[2][3] = "1.2"; //Coluna Custo
+
+    mProd[3][0] = "4"; //Coluna ID
+    mProd[3][1] = "Carne Picada"; //Coluna Descrição
+    mProd[3][2] = "5"; //Coluna Quantidade
+    mProd[3][3] = "5"; //Coluna Custo   
+
+    mProd[4][0] = "5"; //Coluna ID
+    mProd[4][1] = "Arroz Pingo Doce"; //Coluna Descrição
+    mProd[4][2] = "42"; //Coluna Quantidade
+    mProd[4][3] = "1"; //Coluna Custo 
+//------------------------------------------------------
+    mVendas[0][0] = "1"; // id venda
+    mVendas[0][1] = "14h41"; //Hora da venda
+    mVendas[0][2] = "7"; // nº cliente
+    mVendas[0][3] = "56.40€"; // total venda
+
+    mVendas[1][0] = "2"; // Coluna ID
+    mVendas[1][1] = "16h02"; // Hora da venda
+    mVendas[1][2] = "25";// nº cliente
+    mVendas[1][3] = "26.72€"; // total venda
+
+    mVendas[2][0] = "3";//Coluna ID
+    mVendas[2][1] = "18h17"; // Hora da venda
+    mVendas[2][2] = "32";// nº cliente
+    mVendas[2][3] = "78.32€"; // total venda
+
+    mVendas[3][0] = "4";//Coluna ID
+    mVendas[3][1] = "19h07"; // Hora da venda
+    mVendas[3][2] = "55";// nº cliente
+    mVendas[3][3] = "7.77"; // total venda
+
+    mVendas[4][0] = "5"; //Coluna ID
+    mVendas[4][1] = "10h16"; // Hora da venda
+    mVendas[4][2] = "7"; // nº cliente
+    mVendas[4][3] = "69.54"; // total venda
+}
+
+void showMenuVendas(string** mat1){
+    char choice;
     system("clear"); // Limpa o terminal no Windows
     cout << "=====================================\n";
     cout << "          BEM-VINDO AO MENU DE VENDAS          \n";
@@ -101,23 +195,30 @@ void showMenuVendas(){
     cout << "V. Vender\n";
     cout << "C. Consultar Produtos\n";
     cout << "S. Sair\n";
+    impMatriz(mat1, 5,4);
     cout << endl;
     cout << getDateTime() << "\n";
     cout << "=====================================\n";
     cout << "Escolha uma opção: ";
+    cin >> choice;
+    choice = toupper(choice);
 }
 
-void showMenuEstoque(){
+
+void showMenuStock(string** mat){
     char choice;
     do {
     system("clear"); // Limpa o terminal no Windows
     cout << "=====================================\n";
-    cout << "      BEM-VINDO AO MENU DE ESTOQUE          \n";
+    cout << "      BEM-VINDO AO MENU DE STOCK          \n";
     cout << "=====================================\n";
-    cout << "C. Consultar Estoque\n";
+    cout << "C. Consultar Stock\n";
     cout << "A. Adicionar Produto\n";
     cout << "S. Sair\n";
     cout << endl;
+    cout << endl << endl;
+    impMatriz(mat, 5, 4);
+    cout << endl << endl;
     cout << getDateTime() << "\n";
     cout << "=====================================\n";
     cout << "Escolha uma opção: ";
@@ -127,10 +228,12 @@ void showMenuEstoque(){
     
     switch (choice) {
         case 'C':
-            cout << "Consultando Estoque...\n";
-            break;
+            cout << "Consultando Stock...\n";
+            impMatriz(mat, 5, 4);
+            // break;
         case 'A':
             cout << "Adicionando Produto...\n";
+            teste(mat);
             break;
         case 'S':
             cout << "Saindo...\n";
@@ -142,11 +245,11 @@ void showMenuEstoque(){
 }
 //Adicionado comentario
 void showMenu() {
-    // system("clear"); // Limpa o terminal no Windows
+    system("clear"); // Limpa o terminal no Windows
     cout << "=====================================\n";
     cout << "          BEM-VINDO AO MENU          \n";
     cout << "=====================================\n";
-    cout << "E. Estoque\n";
+    cout << "E. Stock\n";
     cout << "V. Vendas\n";
     cout << "C. Compras\n";
     cout << "F. Fechar\n";
@@ -156,15 +259,25 @@ void showMenu() {
     cout << "Escolha uma opção: ";
 }
 
+float validNum(string valor){ // funcao de validação POR TERMINAR
+    
+} 
+
 int main() {
     setlocale(LC_ALL, ""); //mudar charset para utf-8
     char choice;
-    int l = 5;
-    int c = 4;
-    int** mProd = new int*[l];
-    for (int i = 0; i < l; i++) {
-        mProd[i] = new int[c];
+    string** mProd = new string*[5];
+    for (int i = 0; i < 5; i++) {
+        mProd[i] = new string[4];
     }
+
+
+    string** mVendas = new string*[5];
+    for (int i = 0; i < 5; i++) {
+        mVendas[i] = new string[4];
+    }
+
+    prePreencherMatriz(mProd,mVendas);
 
     do {
         showMenu();
@@ -174,11 +287,12 @@ int main() {
 
         switch (choice) {
             case 'E':
-                cout << "Iniciando Estoque...\n";
-                showMenuEstoque();
+                cout << "Iniciando Stock...\n";
+                showMenuStock(mProd);
                 break;
             case 'V':
                 cout << "Carregando Vendas...\n";
+                showMenuVendas(mVendas);
                 break;
             case 'C':
                 cout << "Abrindo Compras...\n";
