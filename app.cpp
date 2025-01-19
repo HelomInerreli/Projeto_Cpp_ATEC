@@ -266,15 +266,16 @@ float validNum(string valor){ // funcao de validação POR TERMINAR
 int main() {
     setlocale(LC_ALL, ""); //mudar charset para utf-8
     char choice;
-    string** mProd = new string*[5];
-    for (int i = 0; i < 5; i++) {
-        mProd[i] = new string[4];
+    int linhasProd = 5, colunasProd = 4, linhasVendas = 5, colunasVendas = 4;
+    string** mProd = new string*[linhasProd];
+    for (int i = 0; i < linhasProd; i++) {
+        mProd[i] = new string[colunasProd];
     }
 
 
-    string** mVendas = new string*[5];
-    for (int i = 0; i < 5; i++) {
-        mVendas[i] = new string[4];
+    string** mVendas = new string*[linhasVendas];
+    for (int i = 0; i < linhasVendas; i++) {
+        mVendas[i] = new string[colunasVendas];
     }
 
     prePreencherMatriz(mProd,mVendas);
