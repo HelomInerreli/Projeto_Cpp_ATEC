@@ -97,6 +97,28 @@ string modificarStock(string valorAtual, float valorNovo){
     return to_string(stof(valorAtual) + valorNovo);
 }
 
+void aumentarLinhas(int**& matriz, int& linhas, int colunas, int novasLinhas) {
+    // Criar uma nova matriz com o número total de linhas aumentadas
+    int** novaMatriz = new int*[linhas + novasLinhas];
+    
+    // Copiar os dados da matriz antiga para a nova matriz
+    for (int i = 0; i < linhas; i++) {
+        novaMatriz[i] = matriz[i];
+    }
+    
+    // Alocar memória para as novas linhas
+    for (int i = linhas; i < linhas + novasLinhas; i++) {
+        novaMatriz[i] = new int[colunas](); // Inicializa com 0
+    }
+    
+    // Liberar a matriz antiga sem liberar as linhas
+    delete[] matriz;
+
+    // Atualizar a matriz e o número de linhas
+    matriz = novaMatriz;
+    linhas += novasLinhas;
+}
+
 int pesquisarID(int id, string** matriz, int linha){
     for (int i = 0; i < linha; i++)
     {
@@ -156,7 +178,7 @@ void prePreencherMatriz(string** mProd,string** mVendas){
     mVendas[3][0] = "4";//Coluna ID
     mVendas[3][1] = "19h07"; // Hora da venda
     mVendas[3][2] = "55";// nº cliente
-    mVendas[3][3] = "7.77€"; // total venda
+    mVendas[3][3] = "7.77"; // total venda
 
     mVendas[4][0] = "5"; //Coluna ID
     mVendas[4][1] = "10h16"; // Hora da venda
@@ -248,6 +270,8 @@ int main() {
     for (int i = 0; i < 5; i++) {
         mProd[i] = new string[4];
     }
+
+
     string** mVendas = new string*[5];
     for (int i = 0; i < 5; i++) {
         mVendas[i] = new string[4];
