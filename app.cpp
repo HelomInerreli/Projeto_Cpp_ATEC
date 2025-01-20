@@ -167,13 +167,14 @@ void prePreencherMatriz(string** mProd,string** mVendas){
 
 void showMenuVendas(string** mat1){
     char choice;
+    do {
     system("clear"); // Limpa o terminal no Windows
     cout << "=====================================\n";
-    cout << "          BEM-VINDO AO MENU DE VENDAS          \n";
+    cout << "     BEM-VINDO AO MENU DE VENDAS          \n";
     cout << "=====================================\n";
     cout << "V. Vender\n";
     cout << "C. Consultar Produtos\n";
-    cout << "S. Sair\n";
+    cout << "F. Fechar\n";
     impMatriz(mat1, 5,4);
     cout << endl;
     cout << getDateTime() << "\n";
@@ -181,6 +182,22 @@ void showMenuVendas(string** mat1){
     cout << "Escolha uma opção: ";
     cin >> choice;
     choice = toupper(choice);
+    
+    
+     switch (choice) {
+        case 'V':
+            cout << "Vender...\n";
+            break;
+        case 'C':
+            cout << "Consultando Produtos...\n";
+            break;
+        case 'F':
+            cout << "Fechando...\n";
+            break;
+        default:
+            cout << "Opção inválida! Tente novamente.\n";
+    }
+    } while (choice != 'F');
 }
 
 
@@ -193,7 +210,7 @@ void showMenuStock(string** mat){
     cout << "=====================================\n";
     cout << "C. Consultar Stock\n";
     cout << "A. Adicionar Produto\n";
-    cout << "S. Sair\n";
+    cout << "F. Fechar\n";
     cout << endl;
     cout << endl << endl;
     impMatriz(mat, 5, 4);
@@ -214,13 +231,13 @@ void showMenuStock(string** mat){
             cout << "Adicionando Produto...\n";
             teste(mat);
             break;
-        case 'S':
+        case 'F':
             cout << "Saindo...\n";
             break;
         default:
             cout << "Opção inválida! Tente novamente.\n";
     }
-    } while (choice != 'S');
+    } while (choice != 'F');
 }
 
 void showMenu() {
@@ -228,7 +245,7 @@ void showMenu() {
     cout << "=====================================\n";
     cout << "          BEM-VINDO AO MENU          \n";
     cout << "=====================================\n";
-    cout << "E. Stock\n";
+    cout << "S. Stock\n";
     cout << "V. Vendas\n";
     cout << "C. Compras\n";
     cout << "F. Fechar\n";
@@ -241,7 +258,7 @@ void showMenu() {
 bool validNum(string valor){ // funcao de validação de input
     
     for (char c : valor) {
-        if (!std::isdigit(c)) {
+        if (!isdigit(c)) {
             return false;
         }
     }
@@ -269,7 +286,7 @@ int main() {
         choice = toupper(choice);//Coloca a opção em maiúsculo
 
         switch (choice) {
-            case 'E':
+            case 'S':
                 cout << "Iniciando Stock...\n";
                 showMenuStock(mProd);
                 break;
