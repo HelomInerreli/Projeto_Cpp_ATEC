@@ -98,18 +98,19 @@ string modificarStock(string valorAtual, float valorNovo){
     return to_string(stof(valorAtual) + valorNovo);
 }
 
-void aumentarLinhas(int**& matriz, int& linhas, int colunas, int novasLinhas) {
+
+void aumentarLinhas(string**& matriz, int& linhas, int colunas, int novasLinhas) {
     // Criar uma nova matriz com o número total de linhas aumentadas
-    int** novaMatriz = new int*[linhas + novasLinhas];
+    string** novaMatriz = new string*[linhas + novasLinhas];
     
-    // Copiar os dados da matriz antiga para a nova matriz
+    // Copiar os dados da matriz antiga para a nova matriz linha por linha
     for (int i = 0; i < linhas; i++) {
         novaMatriz[i] = matriz[i];
     }
     
     // Alocar memória para as novas linhas
     for (int i = linhas; i < linhas + novasLinhas; i++) {
-        novaMatriz[i] = new int[colunas](); // Inicializa com 0
+        novaMatriz[i] = new string[colunas](); // Inicializa com 0
     }
     
     // Liberar a matriz antiga sem liberar as linhas
@@ -120,20 +121,156 @@ void aumentarLinhas(int**& matriz, int& linhas, int colunas, int novasLinhas) {
     linhas += novasLinhas;
 }
 
-int pesquisarID(int id, string** matriz, int linha){
+int pesquisarID(string id, string** matriz, int linha){
     for (int i = 0; i < linha; i++)
     {
-        if (stoi(matriz[i][0]) == id){
+        if (matriz[i][0] == id){
             return i;
         }
     }
 }
+string textToUpper(string text){
+    string retorno;
+    for (char c : text)
+    {
+        retorno+= toupper(c);
+    }
+        return retorno;
+
+}
+
+int findLastId(string** matriz, int linha){
+    int maior=0;
+    
+    for (int i = 0; i < linha; i++)
+    {   
+        if (stoi(matriz[i][0]) > maior)
+        {
+            maior=stoi(matriz[i][0]);
+        }
+    
+    }
+    return maior;
+}
+
+void addProd(string**& mProd, int& linhasProd, int colunasProd, string idProd, string nomeProd, string qtdProd, string precoProd){
+    int linha=linhasProd;
+    aumentarLinhas(mProd, linhasProd, colunasProd, 1);
+    mProd[linha][0]=idProd;
+    mProd[linha][1]=nomeProd;
+    mProd[linha][2]=qtdProd;
+    mProd[linha][3]=precoProd;
+}
+bool validNum(string valor){ // funcao de validação de input
+    
+    for (char c : valor) {
+        if (!isdigit(c)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void showMenuAddProd(string**& mProd, int& linhasProd, int colunasProd){
+    char choice;
+    string id, nomeProd, qtdProd, precoProd;
+    do {
+        system("clear"); // Limpa o terminal no Windows
+    cout << "=====================================\n";
+    cout << "        ADICIONE UM PRODUTO          \n";
+    cout << "=====================================\n";
+    cout << "R. Retornar\n";
+    impMatriz(mProd, linhasProd,colunasProd);
+    cout << endl;
+    //cout << getDateTime() << "\n";
+    cout << "=====================================\n";
+    id= to_string(findLastId(mProd,linhasProd)+ 1);
+    cout << "ID: " << id << endl;
+    cout << "Insira nome do produto: ";
+    cin >> nomeProd;
+    nomeProd=textToUpper(nomeProd);
+    if (nomeProd== "R")
+    {   choice= 'R';
+        break;
+    }
+    cout << "Insira a quantidade: ";
+    cin >> qtdProd;
+    
+    while (!validNum(qtdProd) && textToUpper(qtdProd) != "R")
+    {
+        cout << "Valor inserido não é um numero.\n";
+        cout << "Insira a quantidade: ";
+        cin >> qtdProd;
+         
+    }
+    if (textToUpper(qtdProd)== "R")
+    {   choice= 'R';
+        break;
+    }
+    
+    cout << "Insira o custo: ";
+    cin >> precoProd;
+    while (!validNum(precoProd)&& textToUpper(precoProd) != "R")
+    {
+     
+        cout << "Valor inserido não é um numero.\n";
+        cout << "Insira o custo: ";
+        cin >> precoProd;
+    }
+       if (textToUpper(precoProd)== "R")
+    {   choice= 'R';
+        break;
+    }
+ 
+    addProd(mProd, linhasProd, colunasProd, id, nomeProd, qtdProd, precoProd);
+    }while(choice != 'R');
+}
 
 void teste(string** mat){
-    int linha = pesquisarID(3, mat, 5);
+    int linha = pesquisarID("3", mat, 5);
 
     mat[linha][2] = modificarStock(mat[linha][2], 5);
 }
+
+void showMenuAltProd(string**& mProd, int& linhasProd, int colunasProd){
+    char choice;
+    string id, novoValor;
+    int linha;
+    do {
+        system("clear"); // Limpa o terminal no Windows
+    cout << "=====================================\n";
+    cout << "        ALTERE UM PRODUTO          \n";
+    cout << "=====================================\n";
+    cout << "N. Alterar Nome\n";
+    cout << "Q. Alterar Quantidade\n";
+    cout << "C. Alterar Custo\n";
+    cout << "R. Retornar\n";
+    impMatriz(mProd, linhasProd,colunasProd);
+    cout << endl;
+    //cout << getDateTime() << "\n";
+    cout << "=====================================\n";
+    cout << "Escolha a opção: ";
+    cin >> choice;
+    cout << "Escolha o ID: ";
+    cin >> id;
+    linha = pesquisarID(id, mProd, linhasProd);
+
+
+    switch (choice)
+    {
+    case 'N':
+        cout << "Informe o novo nome para o produto: ";
+        cin >> novoValor;
+        //Criar função de alterar valor da linha/coluna da matriz
+        break;
+    
+    default:
+        break;
+    }
+    
+    }while(choice != 'R');
+}
+
 
 void prePreencherMatriz(string** mProd,string** mVendas){
     mProd[0][0] = "1"; //Coluna ID
@@ -223,7 +360,7 @@ void showMenuVendas(string** mat1){
 }
 
 
-void showMenuStock(string** mat){
+void showMenuStock(string**& mProd, int& linhasProd, int colunasProd){
     char choice;
     do {
     system("clear"); // Limpa o terminal no Windows
@@ -235,7 +372,7 @@ void showMenuStock(string** mat){
     cout << "F. Fechar\n";
     cout << endl;
     cout << endl << endl;
-    impMatriz(mat, 5, 4);
+    impMatriz(mProd, linhasProd, colunasProd);
     cout << endl << endl;
     cout << getDateTime() << "\n";
     cout << "=====================================\n";
@@ -247,11 +384,11 @@ void showMenuStock(string** mat){
     switch (choice) {
         case 'C':
             cout << "Consultando Stock...\n";
-            impMatriz(mat, 5, 4);
+            impMatriz(mProd, linhasProd, colunasProd);
             // break;
         case 'A':
             cout << "Adicionando Produto...\n";
-            teste(mat);
+           showMenuAddProd(mProd, linhasProd, colunasProd);
             break;
         case 'F':
             cout << "Saindo...\n";
@@ -276,17 +413,6 @@ void showMenu() {
     cout << "=====================================\n";
     cout << "Escolha uma opção: ";
 }
-
-bool validNum(string valor){ // funcao de validação de input
-    
-    for (char c : valor) {
-        if (!isdigit(c)) {
-            return false;
-        }
-    }
-    return true;
-}
-
 
 int main() {
     setlocale(LC_ALL, ""); //mudar charset para utf-8
@@ -313,7 +439,7 @@ int main() {
         switch (choice) {
             case 'S':
                 cout << "Iniciando Stock...\n";
-                showMenuStock(mProd);
+                showMenuStock(mProd, linhasProd, colunasProd);
                 break;
             case 'V':
                 cout << "Carregando Vendas...\n";
