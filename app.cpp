@@ -1,36 +1,62 @@
 #include <iostream>
 #include <string>
+#include <iomanip>
 #include <ctime>
 #include <locale> // biblioteca para mudar charset para UTF-8
 #include <cctype> //biblioteca para a função de validação std::isdigit(c)
 
 using namespace std;
 
-// Funcao para imprimir a matriz
-void impMatriz(string **mat, int l, int c)
-{
+// Função para imprimir a matriz formatada com ajuste automático de colunas
+void impMatriz(string** mat, int l, int c) {
+    int* larguras = new int[c]; // Array dinâmico para armazenar as larguras de cada coluna
+
+    // Inicializar o array de larguras com zero
+    for (int j = 0; j < c; j++) {
+        larguras[j] = 0;
+    }
+
+    // Calcular a largura máxima de cada coluna
+    for (int j = 0; j < c; j++) {
+        for (int i = 0; i < l; i++) {
+            if ((int)mat[i][j].size() > larguras[j]) {
+                larguras[j] = mat[i][j].size();
+            }
+        }
+    }
+
+    // Adicionar margem de espaço para cada coluna
+    for (int j = 0; j < c; j++) {
+        larguras[j] += 2; // Margem de 2 espaços
+    }
+
     // Imprimir a borda superior
     cout << "+";
-    for (int j = 0; j < c; j++)
-        cout << "---------------------";
+    for (int j = 0; j < c; j++) {
+        cout << string(larguras[j], '-');
+        cout << "+";
+    }
     cout << endl;
 
     // Imprimir as linhas da matriz
-    for (int i = 0; i < l; i++)
-    {
+    for (int i = 0; i < l; i++) {
         cout << "|";
-        for (int j = 0; j < c; j++)
-        {
-            cout << "   " << mat[i][j] << "   |"; // Cada célula tem uma largura fixa
+        for (int j = 0; j < c; j++) {
+            cout << " " << setw(larguras[j] - 1) << left << mat[i][j] << "|";
         }
         cout << endl;
 
         // Imprimir a borda entre as linhas
         cout << "+";
-        for (int j = 0; j < c; j++)
-            cout << "--------------------";
+        for (int j = 0; j < c; j++) {
+            cout << string(larguras[j], '-');
+            cout << "+";
+        }
         cout << endl;
     }
+
+    // Liberar a memória alocada para o array de larguras
+    delete[] larguras;
 }
 
 // Funcao para ler a matriz
