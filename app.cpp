@@ -175,6 +175,7 @@ int pesquisarID(string id, string **matriz, int linha)
 string textToUpper(string text)
 {
     string retorno;
+    // cout <<"\n######"<< text.size();
     for (char c : text)
     {
         retorno += toupper(c);
@@ -186,7 +187,7 @@ int findLastId(string **matriz, int linha)
 {
     int maior = 0;
 
-    for (int i = 0; i < linha; i++)
+    for (int i = 1; i < linha; i++)
     {
         if (stoi(matriz[i][0]) > maior)
         {
@@ -210,7 +211,7 @@ bool validNum(string valor)
 
     for (char c : valor)
     {
-        if (!isdigit(c))
+        if (!isdigit(c) && c != '.') // verifica se o valor inserido é um número e aceita ponto.
         {
             return false;
         }
@@ -236,7 +237,9 @@ void showMenuAddProd(string**& mProd, int &linhasProd, int colunasProd)
         id = to_string(findLastId(mProd, linhasProd) + 1);
         cout << "ID: " << id << endl;
         cout << "Insira nome do produto: ";
-        cin >> nomeProd;
+        cin.ignore();
+        getline(cin, nomeProd);
+        // cout <<"\n----------"<< nomeProd.size();
         nomeProd = textToUpper(nomeProd);
         if (nomeProd == "R")
         {
@@ -315,7 +318,10 @@ void showMenuAltProd(string**& mProd, int &linhasProd, string id, int linha)
         {
         case 'N':
             cout << "Informe o novo nome para o produto: ";
-            cin >> novoValor;
+            cin.ignore();
+            getline(cin, novoValor);
+            // cout <<"\n----------"<< nomeProd.size();
+            novoValor = textToUpper(novoValor);
             // Criar função de alterar valor da linha/coluna da matriz
             break;
 
@@ -328,64 +334,64 @@ void showMenuAltProd(string**& mProd, int &linhasProd, string id, int linha)
 
 void prePreencherMatriz(string **mProd, string **mVendas)
 {
-    mProd[0][0] = "ID";                // Coluna ID
-    mProd[0][1] = "Nome"; // Coluna Descrição
-    mProd[0][2] = "Quantidade";               // Coluna Quantidade
-    mProd[0][3] = "Custo";                // Coluna Custo
+    mProd[0][0] = "ID";                     // Coluna ID
+    mProd[0][1] = "NOME";                   // Coluna Descrição
+    mProd[0][2] = "QUANTIDADE";            // Coluna Quantidade
+    mProd[0][3] = "CUSTO";                // Coluna Custo              // Coluna Custo
 
     mProd[1][0] = "1";                // Coluna ID
-    mProd[1][1] = "Arroz Continente"; // Coluna Descrição
+    mProd[1][1] = "ARROZ CONTINENTE"; // Coluna Descrição
     mProd[1][2] = "10";               // Coluna Quantidade
     mProd[1][3] = "2";                // Coluna Custo
 
     mProd[2][0] = "2";               // Coluna ID
-    mProd[2][1] = "Massa Espaguete"; // Coluna Descrição
+    mProd[2][1] = "MASSA ESPAGUETE"; // Coluna Descrição
     mProd[2][2] = "15";              // Coluna Quantidade
     mProd[2][3] = "0.80";            // Coluna Custo
 
     mProd[3][0] = "3";        // Coluna ID
-    mProd[3][1] = "Salsicha"; // Coluna Descrição
+    mProd[3][1] = "SALSICHA"; // Coluna Descrição
     mProd[3][2] = "3";        // Coluna Quantidade
     mProd[3][3] = "1.2";      // Coluna Custo
 
     mProd[4][0] = "4";            // Coluna ID
-    mProd[4][1] = "Carne Picada"; // Coluna Descrição
+    mProd[4][1] = "CARNE PICADA"; // Coluna Descrição
     mProd[4][2] = "5";            // Coluna Quantidade
     mProd[4][3] = "5";            // Coluna Custo
 
     mProd[5][0] = "5";                // Coluna ID
-    mProd[5][1] = "Arroz Pingo Doce"; // Coluna Descrição
+    mProd[5][1] = "ARROZ PINGO DOCE"; // Coluna Descrição
     mProd[5][2] = "42";               // Coluna Quantidade
     mProd[5][3] = "1";                // Coluna Custo
     //------------------------------------------------------
 
     mVendas[0][0] = "ID";      // id venda
-    mVendas[0][1] = "Data da venda";  // Hora da venda
-    mVendas[0][2] = "Nº Cliente";      // nº cliente
-    mVendas[0][3] = "Valor"; // total venda
+    mVendas[0][1] = "DATA VENDA";  // Hora da venda
+    mVendas[0][2] = "Nº CLIENTE";      // nº cliente
+    mVendas[0][3] = "VALOR"; // total venda
 
     mVendas[1][0] = "1";      // id venda
-    mVendas[1][1] = "14h41";  // Hora da venda
+    mVendas[1][1] = "01/01/2025 13:00:15";  // Hora da venda
     mVendas[1][2] = "7";      // nº cliente
     mVendas[1][3] = "56.40€"; // total venda
 
     mVendas[2][0] = "2";      // Coluna ID
-    mVendas[2][1] = "16h02";  // Hora da venda
+    mVendas[2][1] = "01/01/2025 14:10:17";  // Hora da venda
     mVendas[2][2] = "25";     // nº cliente
     mVendas[2][3] = "26.72€"; // total venda
 
     mVendas[3][0] = "3";      // Coluna ID
-    mVendas[3][1] = "18h17";  // Hora da venda
+    mVendas[3][1] = "01/01/2025 14:20:35";  // Hora da venda
     mVendas[3][2] = "32";     // nº cliente
     mVendas[3][3] = "78.32€"; // total venda
 
     mVendas[4][0] = "4";     // Coluna ID
-    mVendas[4][1] = "19h07"; // Hora da venda
+    mVendas[4][1] = "01/01/2025 15:06:56"; // Hora da venda
     mVendas[4][2] = "55";    // nº cliente
     mVendas[4][3] = "7.77";  // total venda
 
     mVendas[5][0] = "5";     // Coluna ID
-    mVendas[5][1] = "10h16"; // Hora da venda
+    mVendas[5][1] = "01/01/2025 15:09:15"; // Hora da venda
     mVendas[5][2] = "7";     // nº cliente
     mVendas[5][3] = "69.54"; // total venda
 }
@@ -443,11 +449,9 @@ void showMenuStock(string **&mProd, int &linhasProd, int colunasProd)
         cout << "M. Modificar Produto\n";
         cout << "R. Retornar\n";
         cout << endl;
-        cout << endl
-             << endl;
+        cout << endl;
         impMatriz(mProd, linhasProd, colunasProd);
-        cout << endl
-             << endl;
+        cout << endl;
         cout << getDateTime() << "\n";
         cout << "=====================================\n";
         cout << "Escolha uma opção: ";
@@ -490,7 +494,7 @@ void showMenuStock(string **&mProd, int &linhasProd, int colunasProd)
         default:
             cout << "Opção inválida! Tente novamente.\n";
         }
-    } while (choice != 'F');
+    } while (choice != 'R');
 }
 // Adicionado comentario
 void showMenu()
