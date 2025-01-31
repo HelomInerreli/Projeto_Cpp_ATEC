@@ -465,6 +465,37 @@ void showMenuVendas(string **mat, int linhas, int colunas)
     } while (choice != 'R');
 }
 
+void showMenuSearchStock(string **mat, int linhas, int colunas)
+{
+    char choice;
+    do
+    {
+        system("clear"); // Limpa o terminal no Windows
+        cout << "=====================================\n";
+        cout << "          CONSULTAR STOCK          \n";
+        cout << "=====================================\n";
+        cout << "P. Procurar Produto\n";
+        cout << "R. Retornar\n";
+        cout << endl;
+        printMatrix(mat, linhas, colunas);
+        cout << endl;
+        cout << getDateTime() << "\n";
+        cout << "=====================================\n";
+        cout << "Escolha uma opção: ";
+        cin >> choice;
+        choice = toupper(choice);
+
+        switch (choice)
+        {
+        case 'P':
+            cout << "Procurando Produto...\n";
+            break;
+        default:
+            cout << "Opção inválida! Tente novamente.\n";
+        }
+    } while (choice != 'R');
+}
+
 void showMenuStock(string **&mProd, int &linhasProd, int colunasProd)
 {
     char choice;
@@ -494,7 +525,7 @@ void showMenuStock(string **&mProd, int &linhasProd, int colunasProd)
         {
         case 'C':
             cout << "Consultando Stock...\n";
-            printMatrix(mProd, linhasProd, colunasProd);
+            showMenuSearchStock(mProd, linhasProd, colunasProd);
             // break;
         case 'A':
             cout << "Adicionando Produto...\n";
@@ -530,37 +561,6 @@ void showMenuStock(string **&mProd, int &linhasProd, int colunasProd)
     } while (choice != 'R');
 }
 
-void showMenuSearchStock(string **mat, int linhas, int colunas)
-{
-    char choice;
-    do
-    {
-        system("clear"); // Limpa o terminal no Windows
-        cout << "=====================================\n";
-        cout << "          CONSULTAR STOCK          \n";
-        cout << "=====================================\n";
-        cout << "P. Procurar Produto\n";
-        cout << "R. Retornar\n";
-        cout << endl;
-        printMatrix(mat, linhas, colunas);
-        cout << endl;
-        cout << getDateTime() << "\n";
-        cout << "=====================================\n";
-        cout << "Escolha uma opção: ";
-        cin >> choice;
-        choice = toupper(choice);
-
-        switch (choice)
-        {
-        case 'P':
-            cout << "Procurando Produto...\n";
-            break;
-        default:
-            cout << "Opção inválida! Tente novamente.\n";
-        }
-    } while (choice != 'R');
-}
-
 void showMenu()
 {
     system("clear"); // Limpa o terminal no Windows
@@ -583,6 +583,7 @@ int main()
     char choice;
     int linhasProd = 6, colunasProd = 4, linhasVendas = 6, colunasVendas = 4, linhasCompras = 6, colunasCompras = 4;
     string **mProd = new string *[linhasProd];
+    int *vetorLinhas = new int[2];
     for (int i = 0; i < linhasProd; i++)
     {
         mProd[i] = new string[colunasProd];
