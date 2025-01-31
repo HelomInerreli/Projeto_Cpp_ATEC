@@ -10,46 +10,55 @@
 using namespace std;
 
 // Função para imprimir a matriz formatada com ajuste automático de colunas
-void printMatrix(string** mat, int l, int c)
+void printMatrix(string **mat, int l, int c)
 {
-    int* larguras = new int[c]; // Array dinâmico para armazenar as larguras de cada coluna
+    int *larguras = new int[c]; // Array dinâmico para armazenar as larguras de cada coluna
 
     // Inicializar o array de larguras com zero
-    for (int j = 0; j < c; j++) {
+    for (int j = 0; j < c; j++)
+    {
         larguras[j] = 0;
     }
 
     // Calcular a largura máxima de cada coluna
-    for (int j = 0; j < c; j++) {
-        for (int i = 0; i < l; i++) {
-            if ((int)mat[i][j].size() > larguras[j]) {
+    for (int j = 0; j < c; j++)
+    {
+        for (int i = 0; i < l; i++)
+        {
+            if ((int)mat[i][j].size() > larguras[j])
+            {
                 larguras[j] = mat[i][j].size();
             }
         }
     }
 
     // Adicionar margem de espaço para cada coluna
-    for (int j = 0; j < c; j++) {
+    for (int j = 0; j < c; j++)
+    {
         larguras[j] += 2; // Margem de 2 espaços
     }
 
     // Imprimir a borda superior
     cout << "+";
-    for (int j = 0; j < c; j++) {
+    for (int j = 0; j < c; j++)
+    {
         cout << string(larguras[j], '-');
         cout << "+";
     }
     cout << endl;
 
     // Função para imprimir uma linha da matriz
-    auto printLine = [&](int i) {
+    auto printLine = [&](int i)
+    {
         cout << "|";
-        for (int j = 0; j < c; j++) {
+        for (int j = 0; j < c; j++)
+        {
             cout << " " << setw(larguras[j] - 1) << left << mat[i][j] << "|";
         }
         cout << endl;
         cout << "+";
-        for (int j = 0; j < c; j++) {
+        for (int j = 0; j < c; j++)
+        {
             cout << string(larguras[j], '-');
             cout << "+";
         }
@@ -57,27 +66,35 @@ void printMatrix(string** mat, int l, int c)
     };
 
     // Imprimir as linhas da matriz
-    if (l > 6) {
-        for (int i = 0; i < 3; i++) {
+    if (l > 6)
+    {
+        for (int i = 0; i < 3; i++)
+        {
             printLine(i);
         }
         // Imprimir linha de "..."
         cout << "|";
-        for (int j = 0; j < c; j++) {
+        for (int j = 0; j < c; j++)
+        {
             cout << " " << setw(larguras[j] - 1) << left << "..." << "|";
         }
         cout << endl;
         cout << "+";
-        for (int j = 0; j < c; j++) {
+        for (int j = 0; j < c; j++)
+        {
             cout << string(larguras[j], '-');
             cout << "+";
         }
         cout << endl;
-        for (int i = l - 2; i < l; i++) {
+        for (int i = l - 2; i < l; i++)
+        {
             printLine(i);
         }
-    } else {
-        for (int i = 0; i < l; i++) {
+    }
+    else
+    {
+        for (int i = 0; i < l; i++)
+        {
             printLine(i);
         }
     }
@@ -153,53 +170,50 @@ int findItem(string valor, string **matriz, int linha, int colFind)
     }
     return -1;
 }
-int findItems(string valor, string **matriz, int linha, int colFind, int*& vecLinha) // Se mais que um produto com o mesmo nome
+int findItems(string valor, string **matriz, int linha, int colFind, int *&vecLinha) // Se mais que um produto com o mesmo nome
 {
-    int count=0;
-    bool isFound= false;
+    int count = 0;
+    bool isFound = false;
     for (int i = 0; i < linha; i++)
     {
         if (matriz[i][colFind] == valor)
         {
-           count++;
-           isFound=true;
+            count++;
+            isFound = true;
         }
     }
-    if  (isFound)
+    if (isFound)
     {
-    int *vecResultado=new int[count]; // cria un novo vetor para os resultados encontrados
+        int *vecResultado = new int[count]; // cria un novo vetor para os resultados encontrados
         for (int i = 0; i < linha; i++)
-    {
-        if (matriz[i][colFind] == valor)
         {
-            vecResultado[i]=i;
+            if (matriz[i][colFind] == valor)
+            {
+                vecResultado[i] = i;
+            }
         }
-    }
-    vecLinha=vecResultado;
-    return count;
+        vecLinha = vecResultado;
+        return count;
     }
     return -1;
-    
-    
 }
 
-
-void getMatLines(string** mBase, string**& mResult, int linhas,int colunas, int* vecLinha){
-    linhas=linhas+1;
-    string** mReturn = new string*[linhas];
+void getMatLines(string **mBase, string **&mResult, int linhas, int colunas, int *vecLinha)
+{
+    linhas = linhas + 1;
+    string **mReturn = new string *[linhas];
     int vecLinhaInt;
     for (int i = 0; i < linhas; i++)
     {
         mReturn[i] = new string[colunas];
     }
-    mReturn[0]=mBase[0];
+    mReturn[0] = mBase[0];
     for (int i = 0; i < linhas; i++)
     {
-    vecLinhaInt=vecLinha[i];
-    mReturn[i+1]=mBase[vecLinha[i]];
-
+        vecLinhaInt = vecLinha[i];
+        mReturn[i + 1] = mBase[vecLinha[i]];
     }
-    mResult=mReturn;
+    mResult = mReturn;
 }
 
 string textToUpper(string text)
@@ -227,8 +241,9 @@ int findLastId(string **matriz, int linha)
     return maior;
 }
 
-void addProd(string**& mProd, int& linhasProd, int colunasProd, string idProd, string nomeProd, string qtdProd, string precoProd){
-    int linha=linhasProd;
+void addProd(string **&mProd, int &linhasProd, int colunasProd, string idProd, string nomeProd, string qtdProd, string precoProd)
+{
+    int linha = linhasProd;
     aumentarLinhas(mProd, linhasProd, colunasProd, 1);
     mProd[linha][0] = idProd;
     mProd[linha][1] = nomeProd;
@@ -249,14 +264,12 @@ bool validNum(string valor)
     return true;
 }
 
-
-
 void editFildMatrix(string **&matriz, int linha, int coluna, string valor)
 {
     matriz[linha][coluna] = valor;
 }
 
-void showMenuAddProd(string**& mProd, int &linhasProd, int colunasProd)
+void showMenuAddProd(string **&mProd, int &linhasProd, int colunasProd)
 {
     char choice;
     string id, nomeProd, qtdProd, precoProd;
@@ -267,7 +280,7 @@ void showMenuAddProd(string**& mProd, int &linhasProd, int colunasProd)
         cout << endl;
         cout << "                                    ADICIONAR PRODUTO\n";
         cout << endl;
-        cout <<  "                                     R. RETORNAR\n";
+        cout << "                                     R. RETORNAR\n";
         cout << "======================================================================================\n";
         cout << endl;
         printMatrix(mProd, linhasProd, colunasProd);
@@ -320,27 +333,27 @@ void showMenuAddProd(string**& mProd, int &linhasProd, int colunasProd)
     } while (choice != 'R');
 }
 
-void getMatLine(string**& mBase, string**& mReturn, int linha){
-    mReturn[0]=mBase[0];
-    mReturn[1]=mBase[linha];
-
+void getMatLine(string **&mBase, string **&mReturn, int linha)
+{
+    mReturn[0] = mBase[0];
+    mReturn[1] = mBase[linha];
 }
-void getMatLineProd(string**& mBase, string**& mReturn, int linha){
-    mReturn[0]=mBase[linha];
-
+void getMatLineProd(string **&mBase, string **&mReturn, int linha)
+{
+    mReturn[0] = mBase[linha];
 }
 
-void showMenuAltProd(string**& mProd, int &linhasProd, string id, int linha)
+void showMenuAltProd(string **&mProd, int &linhasProd, string id, int linha)
 {
     char choice;
     string novoValor;
-    string** mLinhaProd = new string*[2]; // criar matriz para buscar produtos do id solicitado (na modificação de produto)
+    string **mLinhaProd = new string *[2]; // criar matriz para buscar produtos do id solicitado (na modificação de produto)
     for (int i = 0; i < 2; i++)
     {
         mLinhaProd[i] = new string[4];
     }
-        getMatLine(mProd, mLinhaProd, linha);
-        
+    getMatLine(mProd, mLinhaProd, linha);
+
     do
     {
         system("clear"); // Limpa o terminal no Windows
@@ -357,7 +370,7 @@ void showMenuAltProd(string**& mProd, int &linhasProd, string id, int linha)
         cout << "======================================================================================\n";
         cout << "Escolha uma opção: ";
         cin >> choice;
-        choice=toupper(choice);
+        choice = toupper(choice);
         switch (choice)
         {
         case 'N':
@@ -376,7 +389,7 @@ void showMenuAltProd(string**& mProd, int &linhasProd, string id, int linha)
                 cout << "Informe a nova quantidade para o produto: ";
                 cin >> novoValor;
             }
-            
+
             editFildMatrix(mProd, linha, 2, novoValor);
             break;
         case 'C':
@@ -392,64 +405,65 @@ void showMenuAltProd(string**& mProd, int &linhasProd, string id, int linha)
             break;
 
         default:
-         cout << "Opção inválida! Tente novamente.\n";
+            cout << "Opção inválida! Tente novamente.\n";
         }
-        
+
     } while (choice != 'R');
 }
 
-float calcSubTotal(string** matCarr, int linhasCarr){
-    float total=0;
+float calcSubTotal(string **matCarr, int linhasCarr)
+{
+    float total = 0;
     for (int i = 1; i < linhasCarr; i++)
     {
-        total=total+stof(matCarr[i][5]);
+        total = total + stof(matCarr[i][5]);
     }
     return total;
 }
 
-void inserirProdutoVenda(string idProd, int qtdProd, string**& matCarr, int& linhasCarr, string** matStock, int linhaStock, int linhaProd){
+void inserirProdutoVenda(string idProd, int qtdProd, string **&matCarr, int &linhasCarr, string **matStock, int linhaStock, int linhaProd)
+{
     string texto;
     float valor, valorIva;
     linhasCarr = linhasCarr + 1;
-    string** mLinha = new string*[1];
+    string **mLinha = new string *[1];
     mLinha[0] = new string[4];
-    string** mReturn = new string*[linhasCarr]; 
+    string **mReturn = new string *[linhasCarr];
     for (int i = 0; i < linhasCarr; i++)
     {
         mReturn[i] = new string[6];
     }
-    for (int i = 0; i < linhasCarr-1; i++)
+    for (int i = 0; i < linhasCarr - 1; i++)
     {
         mReturn[i] = matCarr[i];
     }
 
-    
     getMatLineProd(matStock, mLinha, linhaProd);
-    mReturn[linhasCarr-1][0] = mLinha[0][0];
-    mReturn[linhasCarr-1][1] = mLinha[0][1];
-    mReturn[linhasCarr-1][2] = to_string(qtdProd);
+    mReturn[linhasCarr - 1][0] = mLinha[0][0];
+    mReturn[linhasCarr - 1][1] = mLinha[0][1];
+    mReturn[linhasCarr - 1][2] = to_string(qtdProd);
     texto = mLinha[0][3];
     valor = stof(mLinha[0][3]) * 1.30;
     valorIva = valor * 1.23;
-    mReturn[linhasCarr-1][3] = arredondar(valor);
-    mReturn[linhasCarr-1][4] = arredondar(valorIva);
-    mReturn[linhasCarr-1][5] = arredondar(valorIva * qtdProd);
-    
+    mReturn[linhasCarr - 1][3] = arredondar(valor);
+    mReturn[linhasCarr - 1][4] = arredondar(valorIva);
+    mReturn[linhasCarr - 1][5] = arredondar(valorIva * qtdProd);
+
     matCarr = mReturn;
     delete[] mLinha;
-
-
 }
 
-bool sorteio(int nSorte){
+bool sorteio(int nSorte)
+{
     string pontos = "";
     bool ganhou = false;
     int contador = 0;
     int qtdSorteios = 10;
 
-    do {
+    do
+    {
         string sorteio = to_string(rand() % 1000 + 1);
-        
+
         system("clear"); // Limpa o terminal no Windows
         cout << "======================================================================================\n";
         cout << endl;
@@ -460,7 +474,7 @@ bool sorteio(int nSorte){
         cout << endl;
         // cout << sorteio << "\n";
         cout << "                                 ------------- \n";
-        cout << "                                 | "<<sorteio[0] << " | "<<sorteio[1] << " | "<<sorteio[2] << " | \n";
+        cout << "                                 | " << sorteio[0] << " | " << sorteio[1] << " | " << sorteio[2] << " | \n";
         cout << "                                 ------------- \n";
         cout << endl;
         cout << "======================================================================================\n";
@@ -470,7 +484,8 @@ bool sorteio(int nSorte){
             cout << "                     PARABÉNS!!! VOCÊ GANHOU!!!\n";
             sleep(3);
             break;
-        } else if (contador == qtdSorteios-1)
+        }
+        else if (contador == qtdSorteios - 1)
         {
             cout << "                Infelizmente não foi desta vez! Boa sorte na próxima!\n";
             sleep(3);
@@ -480,158 +495,210 @@ bool sorteio(int nSorte){
         if (pontos == "...")
         {
             pontos = "";
-        }else{
+        }
+        else
+        {
             pontos += ".";
         }
-        sleep(1);      
+        sleep(1);
         contador++;
     } while (!ganhou && contador < qtdSorteios);
     return ganhou;
 }
 
-void showMenuFinalizarVenda(string**& matVenda, int &linhasMatVenda, string**& matCarrinho, int linhasCarrinho, string**& matStock, int linhaStock, int talao, float subTotal, string dataHora)
+bool showMenuFinalizarVenda(string **&matVenda, int &linhasMatVenda, string **&matCarrinho, int linhasCarrinho, string **&matStock, int linhaStock, int talao, float subTotal, string dataHora)
 {
+    srand(time(NULL));
     int idVenda, nSorte, step = 0;
     char opcao = 'Z';
-    string cliente, entrada="";
-    bool ganhou = false, sair = false;
+    string cliente, entrada = "";
+    bool ganhou = false, sair = false, sorteado = false;
     float valorPago = 0.00, troco = 0.00;
 
-    idVenda = findLastId(matVenda, linhasMatVenda) + 1;
+    // idVenda = findLastId(matVenda, linhasMatVenda) + 1;
     nSorte = rand() % 1000 + 1;
 
     do
     {
+        reexibir:
         system("clear"); // Limpa o terminal no Windows
         cout << "======================================================================================\n";
         cout << endl;
         cout << "                          FINALIZAR VENDA - ID VENDA: " << idVenda << "\n";
         cout << endl;
-        cout << "              C. CANCELAR VENDA   " << "V. VOLTAR ETAPA" << "R. RETORNAR A VENDA\n";
+        cout << "              C. CANCELAR VENDA   " << "V. VOLTAR ETAPA   " << "R. RETORNAR A VENDA\n";
         cout << "======================================================================================\n";
         printMatrix(matCarrinho, linhasCarrinho, 6);
         cout << endl;
         cout << "======================================================================================\n";
-        cout << "        Talão: " << talao << "  Data e Hora: " << dataHora << "  TOTAL A PAGAR: " << arredondar(subTotal) << "€ \n";
+        cout << "                 Talão: " << talao << "  Data e Hora: " << dataHora << " \n";
         if (cliente.length() > 0)
         {
-            cout << "NIF Cliente: " << cliente << "                  Número da Sorte: " << nSorte << "\n";
+            cout << "       NIF Cliente: " << cliente << "                  Número da Sorte: " << nSorte << "\n";
         }
-        cout << "Valor pago: " << valorPago << "€ \n";
-        cout << "Troco: " << troco << "€ \n";
+        cout << "Total a pagar: " << arredondar(subTotal) << "€ \n";
+        cout << "Valor pago: " << arredondar(valorPago) << "€ \n";
+        cout << "Troco: " << arredondar(troco) << "€ \n";
         cout << "======================================================================================\n";
+        opcao = 'Z';
         if (step == 0)
         {
             cout << "Insira o NIF do cliente ou N para não adicionar NIF: ";
-        } else if (step == 1)
+        }
+        else if (step == 1)
         {
             cout << "Deseja participar do sorteio? (S/N): ";
             cin >> entrada;
-            if (textToUpper(entrada) == "S")
+            entrada = textToUpper(entrada);
+            if (entrada == "S")
             {
                 ganhou = sorteio(nSorte);
                 if (ganhou)
                 {
                     step = 3;
-                    break;
-                } else {
-                    step = 2;
-                    break;
+                    sorteado = true;
+                    goto reexibir;
                 }
-                sleep(3);
-            } else {
+                else
+                {
+                    step = 2;
+                    sorteado = true;
+                    opcao = 'Z';
+                    goto reexibir;
+                }
+            }
+            else
+            {
                 step = 2;
+                goto reexibir;
             }
             // sair = true;
-        } else if (step == 2)
+        }
+        if (step == 2)
         {
             cout << "Insira o valor pago pelo cliente ou opção: ";
         }
+        if (step == 3)
+        {
+            goto finalizar;
+        }
 
         cin >> entrada;
+        entrada = textToUpper(entrada);
 
-        if (textToUpper(entrada) == "R" || textToUpper(entrada) == "V" || textToUpper(entrada) == "C" || textToUpper(entrada) == "N")
+        if (entrada == "R" || entrada == "V" || entrada == "C" || entrada == "N")
         {
             opcao = entrada[0];
-        } else if (!validNum(entrada) && entrada.length() > 0){
+        }
+        else if (!validNum(entrada) && entrada.length() > 0)
+        {
             opcao = 'S';
         }
 
         switch (opcao)
         {
-            case 'Z':
-                if (step == 0 && entrada.length() == 9)
-                {
-                    cliente = entrada;
-                    step = 1;
-                } else if (step == 0 && entrada.length() != 9)
-                {
-                    cout << "NIF inválido! Insira um NIF válido.\n";
-                    sleep(1);
-                } else if (step == 1 && !ganhou)
-                {
-                    step = 2;
-                } else if (step == 1 && ganhou)
-                {
-                    step = 3;
+        case 'Z':
+            if (step == 0 && entrada.length() == 9)
+            {
+                cliente = entrada;
+                step = 1;
+            }
+            else if (step == 0 && entrada.length() != 9)
+            {
+                cout << "NIF inválido! Insira um NIF válido.\n";
+                sleep(1);
+            }
+            if (step == 2)
+            {
 
-                } else if (step == 2)
+                valorPago = stof(entrada);
+                while (valorPago < subTotal && entrada != "C" && entrada != "R" && entrada != "V")
                 {
+                    cout << "Valor pago é inferior ao total a pagar. Insira um valor igual ou superior ao total a pagar.\n";
+                    cout << "Insira o valor pago pelo cliente ou opção: ";
+                    cin >> entrada;
+                    entrada = textToUpper(entrada);
+                    while (!validNum(entrada) && entrada != "C" && entrada != "R" && entrada != "V")
+                    {
+                        cout << "Valor inserido não é um número.\n";
+                        cout << "Insira o valor pago pelo cliente ou opção: ";
+                        cin >> entrada;
+                        entrada = textToUpper(entrada);
+                    }
                     valorPago = stof(entrada);
-                    troco = valorPago - subTotal;
-                    step = 3;
-                } else if (step == 3)
+                    if (entrada == "C" || entrada == "R" || entrada == "V")
+                    {
+                        break;
+                    }
+                }
+                if (entrada == "C" || entrada == "R" || entrada == "V")
                 {
+                    opcao = entrada[0];
+                    goto finalizar;
+                }
+                troco = valorPago - subTotal;
+                step = 3;
+                goto reexibir;
+            }
+            finalizar:
+            if (step == 3)
+            {
 
-                    //Adicionar a matriz de vendas
-                    cout << "      Compra finalizada com sucesso! Obrigado pela preferência e volte sempre\n";
-                    sleep(3);
-                }
-                
-                break;
-            case 'V':
-                if (step > 0)
-                {
-                    step--;
-                } else {
-                    cout << "Não é possível voltar mais etapas.\n";
-                    sleep(1);
-                }
-                
-                break;
-            case 'C':
-                cout << "Cancelando venda...\n";
+                // Adicionar a matriz de vendas
+                cout << "      Compra finalizada com sucesso! Obrigado pela preferência e volte sempre\n";
+                sleep(5);
+                return false;
+            }
+
+            break;
+        case 'V':
+            if (step > 0)
+            {
+                step--;
+            }
+            else
+            {
+                cout << "Não é possível voltar mais etapas.\n";
                 sleep(1);
-                sair = true;
-                //colocar para voltar para menu principal de vendas
-                break;
-            case 'N':
-                cout << "NIF não informado.\n";
-                sleep(1);
-                step = 2;
-                break;
-            case 'R':
-                cout << "Retornando a venda...\n";
-                sleep(1);
-                sair = true;
-                break;
-            default:
-                cout << "Opção inválida! Tente novamente.\n";
-                sleep(1);
+            }
+
+            break;
+        case 'C':
+            cout << "Cancelando venda...\n";
+            sleep(1);
+            sair = true;
+            // colocar para voltar para menu principal de vendas
+            return false;
+            break;
+        case 'N':
+            cout << "NIF não informado.\n";
+            sleep(1);
+            step = 2;
+            break;
+        case 'R':
+            cout << "Retornando a venda...\n";
+            sleep(1);
+            sair = true;
+            break;
+        default:
+            cout << "Opção inválida! Tente novamente.\n";
+            sleep(1);
         }
     } while (!sair);
+    return false;
 }
 
-void showMenuNovaVenda(string**& matVenda, int &linhasMatVenda, string**& matStock, int linhasMatStock)
+void showMenuNovaVenda(string **&matVenda, int &linhasMatVenda, string **&matStock, int linhasMatStock)
 {
     char opcao;
+    bool retorno;
     string choice, qtdProd;
     int talao, linhaProd;
     int linhasCarr = 1;
     float subTotal = 0.00;
     string dataHora = getDateTime();
     talao = findLastId(matVenda, linhasMatVenda) + 1;
-    string** mCarrinho = new string*[1]; // criar matriz para buscar produtos do id solicitado (na modificação de produto)
+    string **mCarrinho = new string *[1]; // criar matriz para buscar produtos do id solicitado (na modificação de produto)
     for (int i = 0; i < linhasCarr; i++)
     {
         mCarrinho[i] = new string[6];
@@ -642,7 +709,7 @@ void showMenuNovaVenda(string**& matVenda, int &linhasMatVenda, string**& matSto
     mCarrinho[0][3] = "VALOR";
     mCarrinho[0][4] = "VALOR + IVA";
     mCarrinho[0][5] = "VALOR TOTAL";
-        
+
     do
     {
         system("clear"); // Limpa o terminal no Windows
@@ -659,31 +726,39 @@ void showMenuNovaVenda(string**& matVenda, int &linhasMatVenda, string**& matSto
         // cout << "R. Retornar\n";
         printMatrix(mCarrinho, linhasCarr, 6);
         cout << endl;
-        cout << "Data e Hora: " << dataHora <<"                  VALOR TOTAL A PAGAR: " << arredondar(subTotal) << "€ \n";
+        cout << "Data e Hora: " << dataHora << "                  VALOR TOTAL A PAGAR: " << arredondar(subTotal) << "€ \n";
         // cout << getDateTime() << "\n";
         cout << "======================================================================================\n";
         cout << "Insira o ID do produto ou opção: ";
         cin >> choice;
-        choice=textToUpper(choice);
+        choice = textToUpper(choice);
         if (choice.length() > 0)
         {
             if (validNum(choice))
             {
                 opcao = 'Z';
-            }else{
+            }
+            else
+            {
                 opcao = choice[0];
             }
         }
-        
+
         switch (opcao)
         {
         case 'P':
             break;
         case 'F':
             cout << "Finalizando venda...\n";
-            showMenuFinalizarVenda(matVenda, linhasMatVenda, mCarrinho, linhasCarr, matStock, linhasMatStock, talao, subTotal, dataHora);
-            break;
+            retorno = showMenuFinalizarVenda(matVenda, linhasMatVenda, mCarrinho, linhasCarr, matStock, linhasMatStock, talao, subTotal, dataHora);
+            if (retorno)
+            {
+                break;
+            }
+            
+            return;
         case 'C':
+            return;
             break;
         case 'Z':
             linhaProd = findItem(choice, matStock, linhasMatStock, 0);
@@ -710,17 +785,17 @@ void showMenuNovaVenda(string**& matVenda, int &linhasMatVenda, string**& matSto
                 cout << "Opção inválida! Tente novamente.\n";
                 sleep(1);
             }
-            }
-        
+        }
+
     } while (opcao != 'R');
 }
 
 void prePreencherMatriz(string **mProd, string **mVendas, string **mCompras)
 {
-    mProd[0][0] = "ID";                     // Coluna ID
-    mProd[0][1] = "NOME";                   // Coluna Descrição
-    mProd[0][2] = "QUANTIDADE";            // Coluna Quantidade
-    mProd[0][3] = "CUSTO";                // Coluna Custo              // Coluna Custo
+    mProd[0][0] = "ID";         // Coluna ID
+    mProd[0][1] = "NOME";       // Coluna Descrição
+    mProd[0][2] = "QUANTIDADE"; // Coluna Quantidade
+    mProd[0][3] = "CUSTO";      // Coluna Custo              // Coluna Custo
 
     mProd[1][0] = "1";                // Coluna ID
     mProd[1][1] = "ARROZ CONTINENTE"; // Coluna Descrição
@@ -749,69 +824,69 @@ void prePreencherMatriz(string **mProd, string **mVendas, string **mCompras)
     //------------------------------------------------------
 
     mVendas[0][0] = "TALAO";      // Talão venda
-    mVendas[0][1] = "DATA VENDA";  // Hora da venda
-    mVendas[0][2] = "CLIENTE";      // nome cliente
-    mVendas[0][3] = "VALOR"; // total venda
+    mVendas[0][1] = "DATA VENDA"; // Hora da venda
+    mVendas[0][2] = "CLIENTE";    // nome cliente
+    mVendas[0][3] = "VALOR";      // total venda
 
-    mVendas[1][0] = "1";      // id venda
-    mVendas[1][1] = "01/01/2025 13:00:15";  // Hora da venda
-    mVendas[1][2] = "7";      // nº cliente
-    mVendas[1][3] = "56.40"; // total venda
+    mVendas[1][0] = "1";                   // id venda
+    mVendas[1][1] = "01/01/2025 13:00:15"; // Hora da venda
+    mVendas[1][2] = "123456789";                   // nº cliente
+    mVendas[1][3] = "56.40";               // total venda
 
-    mVendas[2][0] = "2";      // Coluna ID
-    mVendas[2][1] = "01/01/2025 14:10:17";  // Hora da venda
-    mVendas[2][2] = "25";     // nº cliente
-    mVendas[2][3] = "26.72"; // total venda
+    mVendas[2][0] = "2";                   // Coluna ID
+    mVendas[2][1] = "01/01/2025 14:10:17"; // Hora da venda
+    mVendas[2][2] = "987654321";                  // nº cliente
+    mVendas[2][3] = "26.72";               // total venda
 
-    mVendas[3][0] = "3";      // Coluna ID
-    mVendas[3][1] = "01/01/2025 14:20:35";  // Hora da venda
-    mVendas[3][2] = "32";     // nº cliente
-    mVendas[3][3] = "78.32"; // total venda
+    mVendas[3][0] = "3";                   // Coluna ID
+    mVendas[3][1] = "01/01/2025 14:20:35"; // Hora da venda
+    mVendas[3][2] = "123123123";                  // nº cliente
+    mVendas[3][3] = "78.32";               // total venda
 
-    mVendas[4][0] = "4";     // Coluna ID
+    mVendas[4][0] = "4";                   // Coluna ID
     mVendas[4][1] = "01/01/2025 15:06:56"; // Hora da venda
-    mVendas[4][2] = "55";    // nº cliente
-    mVendas[4][3] = "7.77";  // total venda
+    mVendas[4][2] = "999999999";                  // nº cliente
+    mVendas[4][3] = "7.77";                // total venda
 
-    mVendas[5][0] = "5";     // Coluna ID
+    mVendas[5][0] = "5";                   // Coluna ID
     mVendas[5][1] = "01/01/2025 15:09:15"; // Hora da venda
-    mVendas[5][2] = "7";     // nº cliente
-    mVendas[5][3] = "69.54"; // total venda
+    mVendas[5][2] = "111111111";                   // nº cliente
+    mVendas[5][3] = "69.54";               // total venda
 
     //------------------------------------------------------
 
     mCompras[0][0] = "TALAO";      // id venda
-    mCompras[0][1] = "ID PRODUTO";  // Hora da venda
-    mCompras[0][2] = "QUANTIDADE";      // nº cliente
-    mCompras[0][3] = "PRECO"; // total venda
+    mCompras[0][1] = "ID PRODUTO"; // Hora da venda
+    mCompras[0][2] = "QUANTIDADE"; // nº cliente
+    mCompras[0][3] = "PRECO";      // total venda
 
-    mCompras[1][0] = "1";      // id venda
-    mCompras[1][1] = "2";  // Hora da venda
-    mCompras[1][2] = "7";      // nº cliente
+    mCompras[1][0] = "1";    // id venda
+    mCompras[1][1] = "2";    // Hora da venda
+    mCompras[1][2] = "7";    // nº cliente
     mCompras[1][3] = "1.05"; // total venda
 
-    mCompras[2][0] = "1";      // Coluna ID
-    mCompras[2][1] = "3";  // Hora da venda
-    mCompras[2][2] = "2";     // nº cliente
+    mCompras[2][0] = "1";    // Coluna ID
+    mCompras[2][1] = "3";    // Hora da venda
+    mCompras[2][2] = "2";    // nº cliente
     mCompras[2][3] = "1.55"; // total venda
 
-    mCompras[3][0] = "2";      // Coluna ID
-    mCompras[3][1] = "5";  // Hora da venda
-    mCompras[3][2] = "3";     // nº cliente
+    mCompras[3][0] = "2";    // Coluna ID
+    mCompras[3][1] = "5";    // Hora da venda
+    mCompras[3][2] = "3";    // nº cliente
     mCompras[3][3] = "1.30"; // total venda
 
-    mCompras[4][0] = "2";     // Coluna ID
-    mCompras[4][1] = "4"; // Hora da venda
+    mCompras[4][0] = "2";    // Coluna ID
+    mCompras[4][1] = "4";    // Hora da venda
     mCompras[4][2] = "5";    // nº cliente
-    mCompras[4][3] = "6.50";  // total venda
+    mCompras[4][3] = "6.50"; // total venda
 
-    mCompras[5][0] = "3";     // Coluna ID
-    mCompras[5][1] = "5"; // Hora da venda
-    mCompras[5][2] = "7";     // nº cliente
+    mCompras[5][0] = "3";    // Coluna ID
+    mCompras[5][1] = "5";    // Hora da venda
+    mCompras[5][2] = "7";    // nº cliente
     mCompras[5][3] = "1.30"; // total venda
 }
 
-void showMenuVendas(string **mat, int linhas, int colunas, string **& matStock, int& linhasMatStock)
+void showMenuVendas(string **mat, int linhas, int colunas, string **&matStock, int &linhasMatStock)
 {
     char choice;
     do
@@ -836,7 +911,7 @@ void showMenuVendas(string **mat, int linhas, int colunas, string **& matStock, 
         {
         case 'V':
             cout << "Vender...\n";
-            showMenuNovaVenda(mat,linhas, matStock, linhasMatStock);
+            showMenuNovaVenda(mat, linhas, matStock, linhasMatStock);
             break;
         case 'C':
             cout << "Consultando Produtos...\n";
@@ -850,9 +925,9 @@ void showMenuSearchStock(string **mat, int linhas, int colunas)
 {
     char choice;
     string valor;
-    int qtdLinhas=0;
-    int* vecLinha= new int[2];
-    string** mLinhasProd = new string*[1]; // criar matriz para buscar produtos do id solicitado (na modificação de produto)
+    int qtdLinhas = 0;
+    int *vecLinha = new int[2];
+    string **mLinhasProd = new string *[1]; // criar matriz para buscar produtos do id solicitado (na modificação de produto)
     for (int i = 0; i < 2; i++)
     {
         mLinhasProd[i] = new string[4];
@@ -867,7 +942,7 @@ void showMenuSearchStock(string **mat, int linhas, int colunas)
         cout << "             I. PROCURAR POR ID   " << "D. PROCURAR POR DESCRIÇÃO   " << "R. RETORNAR\n";
         cout << "======================================================================================\n";
         cout << endl;
-        if  (qtdLinhas>0)
+        if (qtdLinhas > 0)
         {
             printMatrix(mLinhasProd, linhas, colunas);
         }
@@ -883,16 +958,17 @@ void showMenuSearchStock(string **mat, int linhas, int colunas)
         case 'I':
             cout << "Digite o ID do produto desejado: ";
             cin.ignore();
-            getline(cin,valor);
-            qtdLinhas=findItems(valor, mat, linhas, 0, vecLinha); //------------------CORRIGIR TUDO ISSO----------------------
-            getMatLines(mat,mLinhasProd,qtdLinhas,4,vecLinha);;
+            getline(cin, valor);
+            qtdLinhas = findItems(valor, mat, linhas, 0, vecLinha); //------------------CORRIGIR TUDO ISSO----------------------
+            getMatLines(mat, mLinhasProd, qtdLinhas, 4, vecLinha);
+            ;
             break;
         case 'D':
             cout << "Digite a descrição do produto desejado: ";
             cin.ignore();
-            getline(cin,valor);
-            qtdLinhas=findItems(valor, mat, linhas, 1, vecLinha);
-            getMatLines(mat,mLinhasProd,qtdLinhas,4,vecLinha);
+            getline(cin, valor);
+            qtdLinhas = findItems(valor, mat, linhas, 1, vecLinha);
+            getMatLines(mat, mLinhasProd, qtdLinhas, 4, vecLinha);
             break;
 
         default:
@@ -937,23 +1013,23 @@ void showMenuStock(string **&mProd, int &linhasProd, int colunasProd)
             break;
             break;
         case 'M':
-        cout << "Escolha o ID: ";
-        cin >> id;
-        linha = findItem(id, mProd, linhasProd, 0);
-        while (linha < 0 && textToUpper(id) != "R")
-        {
-
-            cout << "O id inserido não foi encontrado.\n";
-            cout << "Insira novamente o id : ";
+            cout << "Escolha o ID: ";
             cin >> id;
             linha = findItem(id, mProd, linhasProd, 0);
-            // system("clear");
-        }
-        if (textToUpper(id) == "R")
-        {
-            choice = 'R';
-            break;
-        }
+            while (linha < 0 && textToUpper(id) != "R")
+            {
+
+                cout << "O id inserido não foi encontrado.\n";
+                cout << "Insira novamente o id : ";
+                cin >> id;
+                linha = findItem(id, mProd, linhasProd, 0);
+                // system("clear");
+            }
+            if (textToUpper(id) == "R")
+            {
+                choice = 'R';
+                break;
+            }
 
             showMenuAltProd(mProd, linhasProd, id, linha);
             break;
@@ -966,8 +1042,6 @@ void showMenuStock(string **&mProd, int &linhasProd, int colunasProd)
         }
     } while (choice != 'R');
 }
-
-
 
 void showMenu()
 {
@@ -1034,7 +1108,7 @@ int main()
             {
                 cout << "Não foi dessa vez! Tente novamente.\n";
             }
-            
+
             break;
         case 'F':
             cout << "Fechando...\n";
