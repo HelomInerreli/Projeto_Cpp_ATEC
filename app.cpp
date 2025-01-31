@@ -493,7 +493,7 @@ void showMenuFinalizarVenda(string**& matVenda, int &linhasMatVenda, string**& m
 {
     int idVenda, nSorte, step = 0;
     char opcao = 'Z';
-    string cliente, entrada;
+    string cliente, entrada="";
     bool ganhou = false, sair = false;
     float valorPago = 0.00, troco = 0.00;
 
@@ -512,28 +512,37 @@ void showMenuFinalizarVenda(string**& matVenda, int &linhasMatVenda, string**& m
         printMatrix(matCarrinho, linhasCarrinho, 6);
         cout << endl;
         cout << "======================================================================================\n";
-        cout << "Talão: " << talao << "  Data e Hora: " << dataHora << "  TOTAL A PAGAR: " << arredondar(subTotal) << "€ \n";
+        cout << "        Talão: " << talao << "  Data e Hora: " << dataHora << "  TOTAL A PAGAR: " << arredondar(subTotal) << "€ \n";
         if (cliente.length() > 0)
         {
-            cout << "NIF Cliente: " << cliente << "Número da Sorte: " << nSorte << "\n";
+            cout << "NIF Cliente: " << cliente << "                  Número da Sorte: " << nSorte << "\n";
         }
         cout << "Valor pago: " << valorPago << "€ \n";
         cout << "Troco: " << troco << "€ \n";
         cout << "======================================================================================\n";
         if (step == 0)
         {
-            cout << "Insira o NIF do cliente ou opção: ";
+            cout << "Insira o NIF do cliente ou N para não adicionar NIF: ";
         } else if (step == 1)
         {
-            ganhou = sorteio(nSorte);
-            if (ganhou)
+            cout << "Deseja participar do sorteio? (S/N): ";
+            cin >> entrada;
+            if (textToUpper(entrada) == "S")
             {
-                step = 3;
+                ganhou = sorteio(nSorte);
+                if (ganhou)
+                {
+                    step = 3;
+                    break;
+                } else {
+                    step = 2;
+                    break;
+                }
+                sleep(3);
             } else {
                 step = 2;
             }
-            sleep(3);
-            sair = true;
+            // sair = true;
         } else if (step == 2)
         {
             cout << "Insira o valor pago pelo cliente ou opção: ";
@@ -541,7 +550,7 @@ void showMenuFinalizarVenda(string**& matVenda, int &linhasMatVenda, string**& m
 
         cin >> entrada;
 
-        if (textToUpper(entrada) == "R" || textToUpper(entrada) == "V" || textToUpper(entrada) == "C")
+        if (textToUpper(entrada) == "R" || textToUpper(entrada) == "V" || textToUpper(entrada) == "C" || textToUpper(entrada) == "N")
         {
             opcao = entrada[0];
         } else if (!validNum(entrada) && entrada.length() > 0){
@@ -559,10 +568,6 @@ void showMenuFinalizarVenda(string**& matVenda, int &linhasMatVenda, string**& m
                 {
                     cout << "NIF inválido! Insira um NIF válido.\n";
                     sleep(1);
-                    break;
-                } else if (step == 0 && entrada.length() == 0)
-                {
-                    step = 2;
                 } else if (step == 1 && !ganhou)
                 {
                     step = 2;
@@ -577,6 +582,7 @@ void showMenuFinalizarVenda(string**& matVenda, int &linhasMatVenda, string**& m
                     step = 3;
                 } else if (step == 3)
                 {
+
                     //Adicionar a matriz de vendas
                     cout << "      Compra finalizada com sucesso! Obrigado pela preferência e volte sempre\n";
                     sleep(3);
@@ -599,6 +605,11 @@ void showMenuFinalizarVenda(string**& matVenda, int &linhasMatVenda, string**& m
                 sair = true;
                 //colocar para voltar para menu principal de vendas
                 break;
+            case 'N':
+                cout << "NIF não informado.\n";
+                sleep(1);
+                step = 2;
+                break;
             case 'R':
                 cout << "Retornando a venda...\n";
                 sleep(1);
@@ -607,11 +618,8 @@ void showMenuFinalizarVenda(string**& matVenda, int &linhasMatVenda, string**& m
             default:
                 cout << "Opção inválida! Tente novamente.\n";
                 sleep(1);
-
-
-
-        
-    } while (sair);
+        }
+    } while (!sair);
 }
 
 void showMenuNovaVenda(string**& matVenda, int &linhasMatVenda, string**& matStock, int linhasMatStock)
@@ -643,7 +651,7 @@ void showMenuNovaVenda(string**& matVenda, int &linhasMatVenda, string**& matSto
         cout << "                             NOVA VENDA - TALÃO: " << talao << "\n";
         cout << endl;
         // cout << dataHora <<"                VALOR TOTAL A PAGAR: " << arredondar(subTotal) << "€ \n";
-        cout << "              F. Finalizar venda   " << "C. Cancelar venda   " << "R. Retornar\n";
+        cout << "              F. FINALIZAR VENDA   " << "C. CANCELAR VENDA   " << "R. RETORNAR\n";
         cout << "======================================================================================\n";
         // cout << "P. Procurar produto\n";
         // cout << "F. Finalizar venda\n";
@@ -926,6 +934,7 @@ void showMenuStock(string **&mProd, int &linhasProd, int colunasProd)
         case 'A':
             cout << "Adicionando Produto...\n";
             showMenuAddProd(mProd, linhasProd, colunasProd);
+            break;
             break;
         case 'M':
         cout << "Escolha o ID: ";
