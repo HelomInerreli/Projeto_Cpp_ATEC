@@ -4,6 +4,8 @@
 #include <ctime>
 #include <locale> // biblioteca para mudar charset para UTF-8
 #include <cctype> //biblioteca para a função de validação std::isdigit(c)
+#include <unistd.h>
+#include <sstream>
 
 using namespace std;
 
@@ -93,13 +95,20 @@ string addZero(int num)
     return to_string(num);
 }
 
+string arredondar(float num)
+{
+    std::stringstream stream;
+    stream << fixed << setprecision(2) << num;
+    return stream.str();
+}
+
 string getDateTime()
 {
     time_t now = time(0);
     tm *ltm = localtime(&now);
     // string dateTime = to_string(ltm->tm_mday) + "/" + to_string(1 + ltm->tm_mon) + "/" + to_string(1900 + ltm->tm_year) + " " + to_string(ltm->tm_hour) + ":" + to_string(ltm->tm_min) + ":" + to_string(ltm->tm_sec);
     string dateTime = addZero(ltm->tm_mday) + "/" + addZero(1 + ltm->tm_mon) + "/" + to_string(1900 + ltm->tm_year) + " " + addZero(ltm->tm_hour) + ":" + addZero(ltm->tm_min) + ":" + addZero(ltm->tm_sec);
-    dateTime = "Data e Hora: " + dateTime;
+    // dateTime = "Data e Hora: " + dateTime;
     return dateTime;
 }
 
@@ -384,8 +393,16 @@ void showMenuAltProd(string**& mProd, int &linhasProd, string id, int linha)
     } while (choice != 'R');
 }
 
-void inserirProdutoVenda(string idProd, int qtdProd, string**& matCarr, int& linhasCarr, string** matStock, int linhaStock){
-    int linha;
+float calcSubTotal(string** matCarr, int linhasCarr){
+    float total=0;
+    for (int i = 1; i < linhasCarr; i++)
+    {
+        total=total+stof(matCarr[i][5]);
+    }
+    return total;
+}
+
+void inserirProdutoVenda(string idProd, int qtdProd, string**& matCarr, int& linhasCarr, string** matStock, int linhaStock, int linhaProd){
     string texto;
     float valor, valorIva;
     linhasCarr = linhasCarr + 1;
@@ -396,23 +413,32 @@ void inserirProdutoVenda(string idProd, int qtdProd, string**& matCarr, int& lin
     {
         mReturn[i] = new string[6];
     }
-    for (int i = 0; i < linhasCarr-2; i++)
+    for (int i = 0; i < linhasCarr-1; i++)
     {
         mReturn[i] = matCarr[i];
     }
-    linha = findItem(idProd, matStock, linhaStock, 0);
-    getMatLineProd(matStock, mLinha, linha);
+
+    
+    getMatLineProd(matStock, mLinha, linhaProd);
     mReturn[linhasCarr-1][0] = mLinha[0][0];
     mReturn[linhasCarr-1][1] = mLinha[0][1];
     mReturn[linhasCarr-1][2] = to_string(qtdProd);
     texto = mLinha[0][3];
     valor = stof(mLinha[0][3]) * 1.30;
     valorIva = valor * 1.23;
-    mReturn[linhasCarr-1][3] = to_string(valor);
-    mReturn[linhasCarr-1][4] = to_string(valorIva);
-    mReturn[linhasCarr-1][5] = to_string(valorIva * qtdProd);
+    mReturn[linhasCarr-1][3] = arredondar(valor);
+    mReturn[linhasCarr-1][4] = arredondar(valorIva);
+    mReturn[linhasCarr-1][5] = arredondar(valorIva * qtdProd);
     
+    matCarr = mReturn;
+    delete[] mLinha;
 
+
+}
+
+void showMenuFinalizarVenda(string**& matVenda, int &linhasMatVenda, string**& matCarrinho, int linhasCarrinho, int talao, float subTotal)
+{
+    
 }
 
 void showMenuNovaVenda(string**& matVenda, int &linhasMatVenda, string**& matStock, int linhasMatStock)
@@ -420,8 +446,9 @@ void showMenuNovaVenda(string**& matVenda, int &linhasMatVenda, string**& matSto
     char opcao;
     string choice, qtdProd;
     int talao, linhaProd;
-    int subTotal = 0, linhasCarr = 1;
-    string txtSubTotal = "0,00 €";
+    int linhasCarr = 1;
+    float subTotal = 0.00;
+    string dataHora = getDateTime();
     talao = findLastId(matVenda, linhasMatVenda) + 1;
     string** mCarrinho = new string*[1]; // criar matriz para buscar produtos do id solicitado (na modificação de produto)
     for (int i = 0; i < linhasCarr; i++)
@@ -429,7 +456,7 @@ void showMenuNovaVenda(string**& matVenda, int &linhasMatVenda, string**& matSto
         mCarrinho[i] = new string[6];
     }
     mCarrinho[0][0] = "ID PROD";
-    mCarrinho[0][1] = "DESCRIÇÃO DO PRODUTO";
+    mCarrinho[0][1] = "DESCRICAO DO PRODUTO";
     mCarrinho[0][2] = "QTD PROD";
     mCarrinho[0][3] = "VALOR";
     mCarrinho[0][4] = "VALOR + IVA";
@@ -438,25 +465,33 @@ void showMenuNovaVenda(string**& matVenda, int &linhasMatVenda, string**& matSto
     do
     {
         system("clear"); // Limpa o terminal no Windows
-        cout << "=====================================\n";
-        cout << "        NOVA VENDA - TALÃO: " << talao << "\n";
+        cout << "======================================================================================\n";
         cout << endl;
-        cout << "VALOR TOTAL A PAGAR: " << txtSubTotal << "\n";
-        cout << "=====================================\n";
-        cout << "P. Procurar produto\n";
-        cout << "R. Retornar\n";
+        cout << "                             NOVA VENDA - TALÃO: " << talao << "\n";
+        cout << endl;
+        // cout << dataHora <<"                VALOR TOTAL A PAGAR: " << arredondar(subTotal) << "€ \n";
+        cout << "              F. Finalizar venda   " << "C. Cancelar venda   " << "R. Retornar\n";
+        cout << "======================================================================================\n";
+        // cout << "P. Procurar produto\n";
+        // cout << "F. Finalizar venda\n";
+        // cout << "C. Cancelar venda\n";
+        // cout << "R. Retornar\n";
         printMatrix(mCarrinho, linhasCarr, 6);
         cout << endl;
+        cout << dataHora <<"                    VALOR TOTAL A PAGAR: " << arredondar(subTotal) << "€ \n";
         // cout << getDateTime() << "\n";
-        cout << "=====================================\n";
-        cout << "Insira o ID do produto: ";
+        cout << "======================================================================================\n";
+        cout << "Insira o ID do produto ou opção: ";
         cin >> choice;
         choice=textToUpper(choice);
-        if (choice.length() == 1)
+        if (choice.length() > 0)
         {
-            opcao = choice[0];
-        }else{
-            opcao = 'Z';
+            if (validNum(choice))
+            {
+                opcao = 'Z';
+            }else{
+                opcao = choice[0];
+            }
         }
         
         switch (opcao)
@@ -486,20 +521,36 @@ void showMenuNovaVenda(string**& matVenda, int &linhasMatVenda, string**& matSto
         //     }
         //     editFildMatrix(mProd, linha, 3, novoValor);
         //     break;
-
-        default:
-            linhaProd = findItem(choice, matStock, linhasMatStock,0);
+        case 'F':
+            cout << "Finalizando venda...\n";
+            break;
+        case 'C':
+            break;
+        case 'Z':
+            linhaProd = findItem(choice, matStock, linhasMatStock, 0);
+            if (linhaProd < 0)
+            {
+                cout << "Produto não encontrado!!!\n";
+                sleep(1);
+                break;
+            }
             cout << "Informe a quantidade do produto: ";
             cin >> qtdProd;
-            while (!validNum(qtdProd) && textToUpper(qtdProd) != "R")
+            while (!validNum(qtdProd) && (textToUpper(qtdProd) != "R" || textToUpper(qtdProd) != "C"))
             {
                 cout << "Valor inserido não é um número.\n";
                 cout << "Informe a quantidade do produto: ";
                 cin >> qtdProd;
             }
-            inserirProdutoVenda(choice, stoi(qtdProd), mCarrinho, linhasCarr, matStock, linhasMatStock);
-
-            //cout << "Opção inválida! Tente novamente.\n";
+            inserirProdutoVenda(choice, stoi(qtdProd), mCarrinho, linhasCarr, matStock, linhasMatStock, linhaProd);
+            subTotal = calcSubTotal(mCarrinho, linhasCarr);
+            break;
+        default:
+            if (opcao != 'R')
+            {
+                cout << "Opção inválida! Tente novamente.\n";
+                sleep(1);
+            }
             }
         
     } while (opcao != 'R');
@@ -538,7 +589,7 @@ void prePreencherMatriz(string **mProd, string **mVendas, string **mCompras)
     mProd[5][3] = "1";                // Coluna Custo
     //------------------------------------------------------
 
-    mVendas[0][0] = "TALÃO";      // Talão venda
+    mVendas[0][0] = "TALAO";      // Talão venda
     mVendas[0][1] = "DATA VENDA";  // Hora da venda
     mVendas[0][2] = "CLIENTE";      // nome cliente
     mVendas[0][3] = "VALOR"; // total venda
@@ -570,10 +621,10 @@ void prePreencherMatriz(string **mProd, string **mVendas, string **mCompras)
 
     //------------------------------------------------------
 
-    mCompras[0][0] = "TALÃO";      // id venda
+    mCompras[0][0] = "TALAO";      // id venda
     mCompras[0][1] = "ID PRODUTO";  // Hora da venda
     mCompras[0][2] = "QUANTIDADE";      // nº cliente
-    mCompras[0][3] = "PREÇO"; // total venda
+    mCompras[0][3] = "PRECO"; // total venda
 
     mCompras[1][0] = "1";      // id venda
     mCompras[1][1] = "2";  // Hora da venda
