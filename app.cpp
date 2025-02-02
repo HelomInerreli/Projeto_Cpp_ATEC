@@ -103,13 +103,19 @@ void printMatrix(string **mat, int l, int c)
     delete[] larguras;
 }
 
-string addZero(int num)
+string addZero(int num, int digitos)
 {
-    if (num < 10)
+    string numStr = to_string(num);
+    while (numStr.size() < digitos)
     {
-        return "0" + to_string(num);
+        numStr = string(digitos - numStr.size(), '0') + numStr;
     }
-    return to_string(num);
+    return numStr;
+    // if (num < 10)
+    // {
+    //     return "0" + to_string(num);
+    // }
+    // return to_string(num);
 }
 
 string arredondar(float num)
@@ -124,7 +130,7 @@ string getDateTime()
     time_t now = time(0);
     tm *ltm = localtime(&now);
     // string dateTime = to_string(ltm->tm_mday) + "/" + to_string(1 + ltm->tm_mon) + "/" + to_string(1900 + ltm->tm_year) + " " + to_string(ltm->tm_hour) + ":" + to_string(ltm->tm_min) + ":" + to_string(ltm->tm_sec);
-    string dateTime = addZero(ltm->tm_mday) + "/" + addZero(1 + ltm->tm_mon) + "/" + to_string(1900 + ltm->tm_year) + " " + addZero(ltm->tm_hour) + ":" + addZero(ltm->tm_min) + ":" + addZero(ltm->tm_sec);
+    string dateTime = addZero(ltm->tm_mday,2) + "/" + addZero(1 + ltm->tm_mon,2) + "/" + to_string(1900 + ltm->tm_year) + " " + addZero(ltm->tm_hour,2) + ":" + addZero(ltm->tm_min,2) + ":" + addZero(ltm->tm_sec,2);
     // dateTime = "Data e Hora: " + dateTime;
     return dateTime;
 }
@@ -479,12 +485,13 @@ bool sorteio(int nSorte,float minCompra ,float valorCompra)
     
     do
     {
-        string sorteio = to_string(rand() % 1000 + 1);
+        string sorteio = to_string(rand() % 100 + 1);
+        sorteio = addZero(stoi(sorteio),3);
 
         system("clear"); // Limpa o terminal no Windows
         cout << "======================================================================================\n";
         cout << endl;
-        cout << "                   NÚMERO DA SORTE CLIENTE: " << nSorte << "   SORTEANDO" << pontos << "\n";
+        cout << "                   NÚMERO DA SORTE CLIENTE: " << addZero(nSorte,3) << "   SORTEANDO" << pontos << "\n";
         cout << endl;
         // cout << "F. Finalizar venda   " << "N. NIF Cliente   "<<"C. Cancelar venda   " << "R. Retornar\n";
         cout << "======================================================================================\n";
@@ -498,7 +505,7 @@ bool sorteio(int nSorte,float minCompra ,float valorCompra)
         if (stoi(sorteio) == nSorte)
         {
             ganhou = true;
-            cout << "                     PARABÉNS!!! VOCÊ GANHOU!!!\n";
+            cout << "                           PARABÉNS!!! VOCÊ GANHOU!!!\n";
             sleep(3);
             break;
         }
@@ -556,7 +563,7 @@ bool showMenuFinalizarVenda(string **&matVenda, int &linhasMatVenda, string **&m
     float valorPago = 0.00, troco = 0.00;
 
     // idVenda = findLastId(matVenda, linhasMatVenda) + 1;
-    nSorte = rand() % 1000 + 1;
+    nSorte = rand() % 100 + 1;
 
     do
     {
@@ -595,6 +602,7 @@ bool showMenuFinalizarVenda(string **&matVenda, int &linhasMatVenda, string **&m
                 ganhou = sorteio(nSorte,5.00,subTotal);
                 if (ganhou)
                 {
+                    cout << "Sua compra será grátis desta vez! Parabéns\n";
                     step = 3;
                     sorteado = true;
                     goto reexibir;
@@ -753,6 +761,8 @@ void showMenuNovaVenda(string **&matVenda, int &linhasMatVenda, string **&matPro
     float subTotal = 0.00;
     string dataHora = getDateTime();
     talao = findLastId(matVenda, linhasMatVenda) + 1;
+    string **mProduto = new string *[1];
+    mProduto[0] = new string[4];
     string **mCarrinho = new string *[1]; // criar matriz para buscar produtos do id solicitado (na modificação de produto)
     for (int i = 0; i < linhasCarr; i++)
     {
@@ -823,6 +833,12 @@ void showMenuNovaVenda(string **&matVenda, int &linhasMatVenda, string **&matPro
                 sleep(1);
                 break;
             }
+            getMatLineProd(matStock, mProduto, linhaProd);
+            cout << endl;
+            cout << "======================================================================================\n";
+            cout << "                    Produto: " << mProduto[0][1] << "  Preço: " << arredondar(stof(mProduto[0][3])*1.30) << "€\n";
+            cout << "======================================================================================\n";
+            cout << endl;
             cout << "Informe a quantidade do produto: ";
             cin >> qtdProd;
             while (!validNum(qtdProd) && (textToUpper(qtdProd) != "R" || textToUpper(qtdProd) != "C"))
@@ -831,6 +847,22 @@ void showMenuNovaVenda(string **&matVenda, int &linhasMatVenda, string **&matPro
                 cout << "Informe a quantidade do produto: ";
                 cin >> qtdProd;
             }
+            while (qtdProd == "0" || stoi(qtdProd) > stoi(mProduto[0][2]) && (textToUpper(qtdProd) != "R" || textToUpper(qtdProd) != "C"))
+            {
+                cout << "Quantidade inválida! Insira uma quantidade maior que 0 e menor que o stock atual do produto\n";
+                cout << "Stock Atual do produto: " << mProduto[0][2] <<"\n";
+                cout << "Informe a quantidade do produto: ";
+                cin >> qtdProd;
+            }
+            if (textToUpper(qtdProd) == "R")
+            {
+                break;
+            }
+            if (textToUpper(qtdProd) == "C")
+            {
+                return;
+            }
+            
             inserirProdutoVenda(choice, stoi(qtdProd), mCarrinho, linhasCarr, matStock, linhasMatStock, linhaProd);
             subTotal = calcSubTotal(mCarrinho, linhasCarr);
             break;
@@ -1190,7 +1222,7 @@ void showMenu()
     cout << endl;
     cout << "                                   MENU PRINCIPAL\n";
     cout << endl;
-    cout << "                    S. STOCK   " << "V. VENDAS   " << "C. COMPRAS   " << "F. FECHAR\n";
+    cout << "               S. STOCK   " << "V. VENDAS   " << "A. SORTEIO ALEATÓRIO   " << "F. FECHAR\n";
     cout << "======================================================================================\n";
     cout << "                          Data e Hora: " << getDateTime() << "\n";
     cout << "======================================================================================\n";
@@ -1238,9 +1270,16 @@ int main()
             cout << "Carregando Vendas...\n";
             showMenuVendas(mVendas, linhasVendas, colunasVendas, mCompras, linhasCompras, mProd, linhasProd);
             break;
-        case 'C':
-            cout << "Abrindo Compras...\n";
-            if (sorteio(380,5.00,50.00))
+        case 'A':
+            cout << "Sorteio Aleatório, digite o número da sorte entre 1 e 99: ";
+            int nSorte;
+            cin >> nSorte;
+            while (nSorte < 1 || nSorte > 99)
+            {
+                cout << "Número inválido! Digite um número entre 1 e 99\n";
+                cin >> nSorte;
+            }
+            if (sorteio(nSorte,5.00,50.00))
             {
                 cout << "Parabéns! Você ganhou o sorteio!\n";
             }
