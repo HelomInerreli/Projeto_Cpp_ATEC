@@ -552,7 +552,7 @@ void showMenuAltProd(string **&mProd, int &linhasProd, string id, int linha)
                 cout << "Informe o novo custo para o produto: ";
                 cin >> novoValor;
             }
-            editFildMatrix(mProd, linha, 3, novoValor);
+            editFildMatrix(mProd, linha, 3, arredondar(stof(novoValor)));
             break;
 
         default:
@@ -977,13 +977,13 @@ void showMenuNovaVenda(string **&matVenda, int &linhasMatVenda, string **&matPro
             cout << endl;
             cout << "Informe a quantidade do produto: ";
             cin >> qtdProd;
-            while (!validNum(qtdProd) && (textToUpper(qtdProd) != "R" || textToUpper(qtdProd) != "C"))
+            while (!validNum(qtdProd) && (textToUpper(qtdProd) != "R" || textToUpper(qtdProd) != "F" || textToUpper(qtdProd) != "P" || textToUpper(qtdProd) != "C"))
             {
                 cout << "Valor inserido não é um número.\n";
                 cout << "Informe a quantidade do produto: ";
                 cin >> qtdProd;
             }
-            while (qtdProd == "0" || stoi(qtdProd) > stoi(mProduto[0][2]) && (textToUpper(qtdProd) != "R" || textToUpper(qtdProd) != "C"))
+            while (qtdProd == "0" || stoi(qtdProd) > stoi(mProduto[0][2]) && (textToUpper(qtdProd) != "R" || textToUpper(qtdProd) != "F" || textToUpper(qtdProd) != "P" || textToUpper(qtdProd) != "C"))
             {
                 cout << "Quantidade inválida! Insira uma quantidade maior que 0 e menor que o stock atual do produto\n";
                 cout << "Stock Atual do produto: " << mProduto[0][2] << "\n";
