@@ -202,6 +202,38 @@ int findItem(string valor, string **matriz, int linha, int colFind)
     return -1;
 }
 
+int findTextInCol(string valor, string **matriz, int linha, int colFind, int *&vecLinha)
+{
+    int count = 0;
+    bool isFound = false;
+    string valorMatriz;
+    for (int i = 0; i < linha; i++)
+    {
+        valorMatriz = matriz[i][colFind];
+        if (valorMatriz.find(valor) != string::npos)
+        {
+            count++;
+            isFound = true;
+        }
+    }
+    if (isFound)
+    {
+        int *vecResultado = new int[count]; // cria un novo vetor para os resultados encontrados
+        int pos = 0;
+        for (int i = 0; i < linha; i++)
+        {
+            if (matriz[i][colFind].find(valor) != string::npos)
+            {
+                vecResultado[pos] = i;
+                pos++;
+            }
+        }
+        vecLinha = vecResultado;
+        return count;
+    }
+    return -1;
+}
+
 int findItems(string valor, string **matriz, int linha, int colFind, int *&vecLinha) // Se mais que um produto com o mesmo nome
 {
     int count = 0;
@@ -305,6 +337,78 @@ void editFildMatrix(string **&matriz, int linha, int coluna, string valor)
     matriz[linha][coluna] = valor;
 }
 
+void showMenuSearchStock(string **mat, int linhas, int colunas)
+{
+    char choice;
+    string valor;
+    int qtdLinhas = 0;
+    int *vecLinha = new int[1];
+    string **mLinhasProd = new string *[1]; // criar matriz para buscar produtos do id solicitado (na modificação de produto)
+    for (int i = 0; i < 2; i++)
+    {
+        mLinhasProd[i] = new string[4];
+    }
+    do
+    {
+        system("clear"); // Limpa o terminal no Windows
+        cout << "\033[32m======================================================================================\n";
+        cout << endl;
+        cout << "                                   CONSULTAR STOCK\033[0m\n";
+        cout << endl;
+        cout << "             I. PROCURAR POR ID   " << "D. PROCURAR POR DESCRIÇÃO   " << "R. RETORNAR\n";
+        cout << "\033[32m======================================================================================\033[0m\n";
+        cout << endl;
+        if (qtdLinhas > 0)
+        {
+            printMatrix(mLinhasProd, qtdLinhas, colunas);
+        }
+        cout << endl;
+        cout << "                          \033[32mData e Hora: " << getDateTime() << "\n";
+        cout << "======================================================================================\033[0m\n";
+        cout << "Escolha uma opção: ";
+        cin >> choice;
+        choice = toupper(choice);
+
+        switch (choice)
+        {
+        case 'I':
+            cout << "Digite o ID do produto desejado: ";
+            cin.ignore();
+            getline(cin, valor);
+            qtdLinhas = findItems(valor, mat, linhas, 0, vecLinha);
+            if (qtdLinhas < 0)
+            {
+                cout << "Produto não encontrado!!!\n";
+                sleep(1);
+                break;
+            }
+            getMatLines(mat, mLinhasProd, qtdLinhas, 4, vecLinha);
+            break;
+        case 'D':
+            cout << "Digite a descrição do produto desejado: ";
+            cin.ignore();
+            getline(cin, valor);
+            valor = textToUpper(valor);
+            qtdLinhas = findTextInCol(valor, mat, linhas, 1, vecLinha);
+            if (qtdLinhas < 0)
+            {
+                cout << "Produto não encontrado!!!\n";
+                sleep(1);
+                break;
+            }
+            getMatLines(mat, mLinhasProd, qtdLinhas, 4, vecLinha);
+            break;
+        case 'R':
+            cout << "Retornando...\n";
+            break;
+
+        default:
+            cout << "Opção inválida! Tente novamente.\n";
+            sleep(1);
+        }
+    } while (choice != 'R');
+}
+
 void showMenuAddProd(string **&mProd, int &linhasProd, int colunasProd)
 {
     char choice;
@@ -312,17 +416,17 @@ void showMenuAddProd(string **&mProd, int &linhasProd, int colunasProd)
     do
     {
         system("clear"); // Limpa o terminal no Windows
-        cout << "======================================================================================\n";
+        cout << "\033[32m======================================================================================\n";
         cout << endl;
-        cout << "                                    ADICIONAR PRODUTO\n";
+        cout << "                                    ADICIONAR PRODUTO\033[0m\n";
         cout << endl;
         cout << "                                     R. RETORNAR\n";
-        cout << "======================================================================================\n";
+        cout << "\033[32m======================================================================================\033[0m\n";
         cout << endl;
         printMatrix(mProd, linhasProd, colunasProd);
         cout << endl;
-        cout << "                          Data e Hora: " << getDateTime() << "\n";
-        cout << "======================================================================================\n";
+        cout << "                          \033[32mData e Hora: " << getDateTime() << "\n";
+        cout << "======================================================================================\033[0m\n";
         id = to_string(findLastId(mProd, linhasProd) + 1);
         cout << "ID: " << id << endl;
         cout << "Insira nome do produto: ";
@@ -394,17 +498,17 @@ void showMenuAltProd(string **&mProd, int &linhasProd, string id, int linha)
     do
     {
         system("clear"); // Limpa o terminal no Windows
-        cout << "======================================================================================\n";
+        cout << "\033[32m======================================================================================\n";
         cout << endl;
-        cout << "                                    MODIFICAR PRODUTO\n";
+        cout << "                                    MODIFICAR PRODUTO\033[0m\n";
         cout << endl;
         cout << "   N. ALTERAR NOME   " << "Q. ALTERAR QUANTIDADE   " << "C. ALTERAR CUSTO   " << "R. RETORNAR\n";
-        cout << "======================================================================================\n";
+        cout << "\033[32m======================================================================================\033[0m\n";
         cout << endl;
         printMatrix(mLinhaProd, 2, 4);
         cout << endl;
-        cout << "                          Data e Hora: " << getDateTime() << "\n";
-        cout << "======================================================================================\n";
+        cout << "                          \033[32mData e Hora: " << getDateTime() << "\n";
+        cout << "======================================================================================\033[0m\n";
         cout << "Escolha uma opção: ";
         cin >> choice;
         choice = toupper(choice);
@@ -514,19 +618,19 @@ bool sorteio(int nSorte, float minCompra, float valorCompra)
         sorteio = addZero(stoi(sorteio), 3);
 
         system("clear"); // Limpa o terminal no Windows
-        cout << "======================================================================================\n";
+        cout << "\033[32m======================================================================================\n";
         cout << endl;
-        cout << "                   NÚMERO DA SORTE CLIENTE: " << addZero(nSorte, 3) << "   SORTEANDO" << pontos << "\n";
+        cout << "                   NÚMERO DA SORTE CLIENTE: \033[0m" << addZero(nSorte, 3) << "   \033[32mSORTEANDO" << pontos << "\n";
         cout << endl;
         // cout << "F. Finalizar venda   " << "N. NIF Cliente   "<<"C. Cancelar venda   " << "R. Retornar\n";
         cout << "======================================================================================\n";
         cout << endl;
         // cout << sorteio << "\n";
         cout << "                                 ------------- \n";
-        cout << "                                 | " << sorteio[0] << " | " << sorteio[1] << " | " << sorteio[2] << " | \n";
+        cout << "                                 | \033[0m" << sorteio[0] << "\033[32m | \033[0m" << sorteio[1] << "\033[32m | \033[0m" << sorteio[2] << "\033[32m | \n";
         cout << "                                 ------------- \n";
         cout << endl;
-        cout << "======================================================================================\n";
+        cout << "======================================================================================\033[0m\n";
         if (stoi(sorteio) == nSorte)
         {
             ganhou = true;
@@ -580,38 +684,39 @@ void updateMatProdVendas(string **&matProdVendas, string **matCarrinho, int &lin
 
 bool showMenuFinalizarVenda(string **&matVenda, int &linhasMatVenda, string **&matProdVendas, int &linhasProdVendas, string **&matCarrinho, int linhasCarrinho, string **&matStock, int linhaStock, int talao, float subTotal, string dataHora)
 {
-    srand(time(NULL));
-    int idVenda, nSorte, step = 0;
+    // srand(time(NULL));
+    int nSorte, step = 0;
     char opcao = 'Z';
     string cliente, entrada = "";
     bool ganhou = false, sair = false, sorteado = false;
     float valorPago = 0.00, troco = 0.00;
 
     // idVenda = findLastId(matVenda, linhasMatVenda) + 1;
-    nSorte = rand() % 100 + 1;
+    // nSorte = rand() % 100 + 1;
+    nSorte = talao;
 
     do
     {
     reexibir:
         system("clear"); // Limpa o terminal no Windows
-        cout << "======================================================================================\n";
+        cout << "\033[32m======================================================================================\n";
         cout << endl;
-        cout << "                          FINALIZAR VENDA - ID VENDA: " << idVenda << "\n";
+        cout << "                          FINALIZAR VENDA - ID VENDA: \033[0m" << talao << "\n";
         cout << endl;
         cout << "              C. CANCELAR VENDA   " << "V. VOLTAR ETAPA   " << "R. RETORNAR A VENDA\n";
-        cout << "======================================================================================\n";
+        cout << "\033[32m======================================================================================\033[0m\n";
         printMatrix(matCarrinho, linhasCarrinho, 6);
         cout << endl;
-        cout << "======================================================================================\n";
-        cout << "                 Talão: " << talao << "  Data e Hora: " << dataHora << " \n";
+        cout << "\033[32m======================================================================================\n";
+        cout << "                 Talão: \033[0m" << talao << "  \033[32mData e Hora: \033[0m" << dataHora << " \n";
         if (cliente.length() > 0)
         {
-            cout << "       NIF Cliente: " << cliente << "                  Número da Sorte: " << nSorte << "\n";
+            cout << "       \033[32mNIF Cliente: \033[0m" << cliente << "                  \033[32mNúmero da Sorte: \033[0m" << addZero(nSorte, 3) << "\n";
         }
-        cout << "Total a pagar: " << arredondar(subTotal) << "€ \n";
-        cout << "Valor pago: " << arredondar(valorPago) << "€ \n";
-        cout << "Troco: " << arredondar(troco) << "€ \n";
-        cout << "======================================================================================\n";
+        cout << "\033[32mTotal a pagar: \033[0m" << arredondar(subTotal) << "€ \n";
+        cout << "\033[32mValor pago: \033[0m" << arredondar(valorPago) << "€ \n";
+        cout << "\033[32mTroco: \033[0m" << arredondar(troco) << "€ \n";
+        cout << "\033[32m======================================================================================\033[0m\n";
         opcao = 'Z';
         if (step == 0)
         {
@@ -802,18 +907,18 @@ void showMenuNovaVenda(string **&matVenda, int &linhasMatVenda, string **&matPro
     do
     {
         system("clear"); // Limpa o terminal no Windows
-        cout << "======================================================================================\n";
+        cout << "\033[32m======================================================================================\n";
         cout << endl;
-        cout << "                             NOVA VENDA - TALÃO: " << talao << "\n";
+        cout << "                             NOVA VENDA - TALÃO: \033[0m" << talao << "\n";
         cout << endl;
         // cout << dataHora <<"                VALOR TOTAL A PAGAR: " << arredondar(subTotal) << "€ \n";
-        cout << "              F. FINALIZAR VENDA   " << "C. CANCELAR VENDA   " << "R. RETORNAR\n";
-        cout << "======================================================================================\n";
+        cout << "     F. FINALIZAR VENDA   " << "P. CONSULTAR PRODUTO   " << "C. CANCELAR VENDA   " << "R. RETORNAR\n";
+        cout << "\033[32m======================================================================================\033[0m\n";
         printMatrix(mCarrinho, linhasCarr, 6);
         cout << endl;
-        cout << "Data e Hora: " << dataHora << "                  VALOR TOTAL A PAGAR: " << arredondar(subTotal) << "€ \n";
+        cout << "\033[32mData e Hora: " << dataHora << "                  VALOR TOTAL A PAGAR: " << arredondar(subTotal) << "€ \n";
         // cout << getDateTime() << "\n";
-        cout << "======================================================================================\n";
+        cout << "======================================================================================\033[0m\n";
         cout << "Insira o ID do produto ou opção: ";
         cin >> choice;
         choice = textToUpper(choice);
@@ -832,6 +937,7 @@ void showMenuNovaVenda(string **&matVenda, int &linhasMatVenda, string **&matPro
         switch (opcao)
         {
         case 'P':
+            showMenuSearchStock(matStock, linhasMatStock, 4);
             break;
         case 'F':
             cout << "Finalizando venda...\n";
@@ -855,9 +961,9 @@ void showMenuNovaVenda(string **&matVenda, int &linhasMatVenda, string **&matPro
             }
             getMatLineProd(matStock, mProduto, linhaProd);
             cout << endl;
-            cout << "======================================================================================\n";
-            cout << "                    Produto: " << mProduto[0][1] << "  Preço: " << arredondar(stof(mProduto[0][3]) * 1.30) << "€\n";
-            cout << "======================================================================================\n";
+            cout << "\033[32m======================================================================================\n";
+            cout << "                    Produto: \033[0m" << mProduto[0][1] << "  \033[32mPreço: \033[0m" << arredondar(stof(mProduto[0][3]) * 1.30) << "€\n";
+            cout << "\033[32m======================================================================================\033[0m\n";
             cout << endl;
             cout << "Informe a quantidade do produto: ";
             cin >> qtdProd;
@@ -1013,12 +1119,12 @@ void showMenuConsultaProdutosVendas(string **matProdVendas, int linhasProdVendas
     do
     {
         system("clear"); // Limpa o terminal no Windows
-        cout << "======================================================================================\n";
+        cout << "\033[32m======================================================================================\n";
         cout << endl;
-        cout << "                           CONSULTAR PRODUTOS DE UMA VENDA\n";
+        cout << "                           CONSULTAR PRODUTOS DE UMA VENDA\033[0m\n";
         cout << endl;
         cout << "          T. PROCURAR POR TALÃO   " << "I. PROCURAR POR ID PRODUTO   " << "R. RETORNAR\n";
-        cout << "======================================================================================\n";
+        cout << "\033[32m======================================================================================\033[0m\n";
         cout << endl;
         if (qtdLinhas > 0)
         {
@@ -1029,8 +1135,8 @@ void showMenuConsultaProdutosVendas(string **matProdVendas, int linhasProdVendas
             printMatrix(matProdVendas, linhasProdVendas, 5);
         }
         cout << endl;
-        cout << "                          Data e Hora: " << getDateTime() << "\n";
-        cout << "======================================================================================\n";
+        cout << "                          \033[32mData e Hora: " << getDateTime() << "\n";
+        cout << "======================================================================================\033[0m\n";
         cout << "Escolha uma opção: ";
         cin >> choice;
         choice = toupper(choice);
@@ -1082,17 +1188,17 @@ void showMenuVendas(string **mat, int linhas, int colunas, string **&matProdVend
     do
     {
         system("clear"); // Limpa o terminal no Windows
-        cout << "======================================================================================\n";
+        cout << "\033[32m======================================================================================\n";
         cout << endl;
-        cout << "                                    MENU DE VENDAS\n";
+        cout << "                                    MENU DE VENDAS\033[0m\n";
         cout << endl;
         cout << "               V.VENDER   " << "C. CONSULTAR PRODUTOS DE UMA VENDA  " << "R. RETORNAR\n";
-        cout << "======================================================================================\n";
+        cout << "\033[32m======================================================================================\n";
         cout << endl;
         printMatrix(mat, linhas, colunas);
         cout << endl;
         cout << "                          Data e Hora: " << getDateTime() << "\n";
-        cout << "======================================================================================\n";
+        cout << "======================================================================================\033[0m\n";
         cout << "Escolha uma opção: ";
         cin >> choice;
         choice = toupper(choice);
@@ -1113,75 +1219,6 @@ void showMenuVendas(string **mat, int linhas, int colunas, string **&matProdVend
     } while (choice != 'R');
 }
 
-void showMenuSearchStock(string **mat, int linhas, int colunas)
-{
-    char choice;
-    string valor;
-    int qtdLinhas = 0;
-    int *vecLinha = new int[1];
-    string **mLinhasProd = new string *[1]; // criar matriz para buscar produtos do id solicitado (na modificação de produto)
-    for (int i = 0; i < 2; i++)
-    {
-        mLinhasProd[i] = new string[4];
-    }
-    do
-    {
-        system("clear"); // Limpa o terminal no Windows
-        cout << "======================================================================================\n";
-        cout << endl;
-        cout << "                                   CONSULTAR STOCK\n";
-        cout << endl;
-        cout << "             I. PROCURAR POR ID   " << "D. PROCURAR POR DESCRIÇÃO   " << "R. RETORNAR\n";
-        cout << "======================================================================================\n";
-        cout << endl;
-        if (qtdLinhas > 0)
-        {
-            printMatrix(mLinhasProd, qtdLinhas, colunas);
-        }
-        cout << endl;
-        cout << "                          Data e Hora: " << getDateTime() << "\n";
-        cout << "======================================================================================\n";
-        cout << "Escolha uma opção: ";
-        cin >> choice;
-        choice = toupper(choice);
-
-        switch (choice)
-        {
-        case 'I':
-            cout << "Digite o ID do produto desejado: ";
-            cin.ignore();
-            getline(cin, valor);
-            qtdLinhas = findItems(valor, mat, linhas, 0, vecLinha);
-            if (qtdLinhas < 0)
-            {
-                cout << "Produto não encontrado!!!\n";
-                sleep(1);
-                break;
-            }
-            getMatLines(mat, mLinhasProd, qtdLinhas, 4, vecLinha);
-            break;
-        case 'D':
-            cout << "Digite a descrição do produto desejado: ";
-            cin.ignore();
-            getline(cin, valor);
-            valor = textToUpper(valor);
-            qtdLinhas = findItems(valor, mat, linhas, 1, vecLinha);
-            if (qtdLinhas < 0)
-            {
-                cout << "Produto não encontrado!!!\n";
-                sleep(1);
-                break;
-            }
-            getMatLines(mat, mLinhasProd, qtdLinhas, 4, vecLinha);
-            break;
-
-        default:
-            cout << "Opção inválida! Tente novamente.\n";
-            sleep(1);
-        }
-    } while (choice != 'R');
-}
-
 void showMenuStock(string **&mProd, int &linhasProd, int colunasProd)
 {
     char choice;
@@ -1192,17 +1229,17 @@ void showMenuStock(string **&mProd, int &linhasProd, int colunasProd)
     do
     {
         system("clear"); // Limpa o terminal no Windows
-        cout << "======================================================================================\n";
+        cout << "\033[32m======================================================================================\n";
         cout << endl;
-        cout << "                                    MENU STOCK\n";
+        cout << "                                    MENU STOCK\033[0m\n";
         cout << endl;
         cout << "   C. CONSULTAR   " << "E. ELIMINAR   " << "A. ADICIONAR   " << "M. MODIFICAR   " << "R. RETORNAR\n";
-        cout << "======================================================================================\n";
+        cout << "\033[32m======================================================================================\033[0m\n";
         cout << endl;
         printMatrix(mProd, linhasProd, colunasProd);
         cout << endl;
-        cout << "                          Data e Hora: " << getDateTime() << "\n";
-        cout << "======================================================================================\n";
+        cout << "                          \033[32mData e Hora: " << getDateTime() << "\n";
+        cout << "======================================================================================\033[0m\n";
         cout << "Escolha uma opção: ";
         cin >> choice;
         choice = toupper(choice);
@@ -1212,11 +1249,10 @@ void showMenuStock(string **&mProd, int &linhasProd, int colunasProd)
         case 'C':
             cout << "Consultando Stock...\n";
             showMenuSearchStock(mProd, linhasProd, colunasProd);
-            // break;
+            break;
         case 'A':
             cout << "Adicionando Produto...\n";
             showMenuAddProd(mProd, linhasProd, colunasProd);
-            break;
             break;
         case 'E':
             cout << "Informe o ID do produto que deseja remover: ";
@@ -1236,9 +1272,9 @@ void showMenuStock(string **&mProd, int &linhasProd, int colunasProd)
             }
             getMatLineProd(mProd, mProduto, linha);
             cout << endl;
-            cout << "======================================================================================\n";
-            cout << "        Produto: " << mProduto[0][1] << "  Quantidade: " << mProduto[0][2] <<"  Custo: " << mProduto[0][3] << "\n";
-            cout << "======================================================================================\n";
+            cout << "\033[32m======================================================================================\n";
+            cout << "        Produto: \033[0m" << mProduto[0][1] << "  \033[32mQuantidade: \033[0m" << mProduto[0][2] <<"  \033[32mCusto: \033[0m" << mProduto[0][3] << "\n";
+            cout << "\033[32m======================================================================================\033[0m\n";
             cout << endl;
             cout << "Deseja realmente remover o produto? (S/N): ";
             cin >> id;
@@ -1282,20 +1318,21 @@ void showMenuStock(string **&mProd, int &linhasProd, int colunasProd)
 void showMenu()
 {
     system("clear"); // Limpa o terminal no Windows
-    cout << "======================================================================================\n";
+    cout << "\033[32m======================================================================================\n";
     cout << endl;
-    cout << "                                   MENU PRINCIPAL\n";
+    cout << "                                   MENU PRINCIPAL\033[0m\n";
     cout << endl;
     cout << "               S. STOCK   " << "V. VENDAS   " << "A. SORTEIO ALEATÓRIO   " << "F. FECHAR\n";
-    cout << "======================================================================================\n";
+    cout << "\033[32m======================================================================================\n";
     cout << "                          Data e Hora: " << getDateTime() << "\n";
-    cout << "======================================================================================\n";
+    cout << "======================================================================================\033[0m\n";
     cout << "Escolha uma opção: ";
 }
 
 int main()
 {
     setlocale(LC_ALL, ""); // mudar charset para utf-8
+    system("color A");     // Mudar cor do terminal no Windows
     char choice;
     int linhasProd = 6, colunasProd = 4, linhasVendas = 6, colunasVendas = 4, linhasCompras = 6, colunasCompras = 5;
     string **mProd = new string *[linhasProd];
