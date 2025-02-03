@@ -1044,6 +1044,26 @@ void prePreencherMatriz(string **mProd, string **mVendas, string **mCompras)
     mProd[5][1] = "ARROZ PINGO DOCE"; // Coluna Descrição
     mProd[5][2] = "42";               // Coluna Quantidade
     mProd[5][3] = "1.00";                // Coluna Custo
+
+    mProd[6][0] = "6";                // Coluna ID
+    mProd[6][1] = "MANTEIGA"; // Coluna Descrição
+    mProd[6][2] = "50";               // Coluna Quantidade
+    mProd[6][3] = "1.85";                // Coluna Custo
+
+    mProd[7][0] = "7";                // Coluna ID
+    mProd[7][1] = "BOLACHA"; // Coluna Descrição
+    mProd[7][2] = "9";               // Coluna Quantidade
+    mProd[7][3] = "1.00";                // Coluna Custo
+
+    mProd[8][0] = "8";                // Coluna ID
+    mProd[8][1] = "LEITE"; // Coluna Descrição
+    mProd[8][2] = "35";               // Coluna Quantidade
+    mProd[8][3] = "0.90";                // Coluna Custo
+
+    mProd[9][0] = "12";                // Coluna ID
+    mProd[9][1] = "ARROZ MERCADONA"; // Coluna Descrição
+    mProd[9][2] = "17";               // Coluna Quantidade
+    mProd[9][3] = "1.75";                // Coluna Custo
     //------------------------------------------------------
 
     mVendas[0][0] = "TALAO";      // Talão venda
@@ -1096,23 +1116,35 @@ void prePreencherMatriz(string **mProd, string **mVendas, string **mCompras)
     mCompras[2][3] = "2";
     mCompras[2][4] = "1.55";
 
-    mCompras[3][0] = "2";
+    mCompras[3][0] = "1";
     mCompras[3][1] = "5";
     mCompras[3][2] = "ARROZ PINGO DOCE";
     mCompras[3][3] = "3";
     mCompras[3][4] = "1.30";
 
-    mCompras[4][0] = "2";
+    mCompras[4][0] = "1";
     mCompras[4][1] = "4";
     mCompras[4][2] = "CARNE PICADA";
     mCompras[4][3] = "5";
     mCompras[4][4] = "6.50";
 
-    mCompras[5][0] = "3";
+    mCompras[5][0] = "2";
     mCompras[5][1] = "5";
     mCompras[5][2] = "ARROZ PINGO DOCE";
     mCompras[5][3] = "7";
     mCompras[5][4] = "1.30";
+
+    mCompras[6][0] = "3";
+    mCompras[6][1] = "5";
+    mCompras[6][2] = "MANTEIGA";
+    mCompras[6][3] = "2";
+    mCompras[6][4] = "1.85";
+
+    mCompras[7][0] = "3";
+    mCompras[7][1] = "5";
+    mCompras[7][2] = "ARROZ MERCADONA";
+    mCompras[7][3] = "3";
+    mCompras[7][4] = "1.75";
 }
 
 void showMenuConsultaProdutosVendas(string **matProdVendas, int linhasProdVendas, string **matVendas, int linhasVendas)
@@ -1344,7 +1376,7 @@ int main()
     setlocale(LC_ALL, ""); // mudar charset para utf-8
     system("color A");     // Mudar cor do terminal no Windows
     char choice;
-    int linhasProd = 6, colunasProd = 4, linhasVendas = 6, colunasVendas = 4, linhasCompras = 6, colunasCompras = 5;
+    int linhasProd = 10, colunasProd = 4, linhasVendas = 6, colunasVendas = 4, linhasCompras = 8, colunasCompras = 5;
     string **mProd = new string *[linhasProd];
     for (int i = 0; i < linhasProd; i++)
     {
