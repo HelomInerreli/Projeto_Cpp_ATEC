@@ -10,7 +10,7 @@
 using namespace std;
 
 // Função para imprimir a matriz formatada com ajuste automático de colunas
-void printMatrix(string **mat, int l, int c)
+void printMatrix(string **mat, int l, int c, bool showAll = false)
 {
     int *larguras = new int[c]; // Array dinâmico para armazenar as larguras de cada coluna
 
@@ -66,7 +66,7 @@ void printMatrix(string **mat, int l, int c)
     };
 
     // Imprimir as linhas da matriz
-    if (l > 6)
+    if (l > 6 && !showAll)
     {
         for (int i = 0; i < 3; i++)
         {
@@ -340,6 +340,7 @@ void editFildMatrix(string **&matriz, int linha, int coluna, string valor)
 void showMenuSearchStock(string **mat, int linhas, int colunas)
 {
     char choice;
+    bool mostrarTabelaCompleta = false;
     string valor;
     int qtdLinhas = 0;
     int *vecLinha = new int[1];
@@ -355,13 +356,17 @@ void showMenuSearchStock(string **mat, int linhas, int colunas)
         cout << endl;
         cout << "                                   CONSULTAR STOCK\033[0m\n";
         cout << endl;
-        cout << "             I. PROCURAR POR ID   " << "D. PROCURAR POR DESCRIÇÃO   " << "R. RETORNAR\n";
+        cout << "  I. PROC. POR ID   " << "D. PROC. POR DESCRIÇÃO   " << "M. MOSTRAR TODOS PRODUTOS   " << "R. RETORNAR\n";
         cout << "\033[32m======================================================================================\033[0m\n";
         cout << endl;
-        if (qtdLinhas > 0)
+        if (qtdLinhas > 0 && !mostrarTabelaCompleta)
         {
-            printMatrix(mLinhasProd, qtdLinhas, colunas);
+            printMatrix(mLinhasProd, qtdLinhas, colunas, true);
         }
+        if (mostrarTabelaCompleta)
+        {
+            printMatrix(mat, linhas, colunas, true);
+        }       
         cout << endl;
         cout << "                          \033[32mData e Hora: " << getDateTime() << "\n";
         cout << "======================================================================================\033[0m\n";
@@ -371,6 +376,9 @@ void showMenuSearchStock(string **mat, int linhas, int colunas)
 
         switch (choice)
         {
+        case 'M':
+            mostrarTabelaCompleta = true;
+            break;
         case 'I':
             cout << "Digite o ID do produto desejado: ";
             cin.ignore();
@@ -383,6 +391,7 @@ void showMenuSearchStock(string **mat, int linhas, int colunas)
                 break;
             }
             getMatLines(mat, mLinhasProd, qtdLinhas, 4, vecLinha);
+            mostrarTabelaCompleta = false;
             break;
         case 'D':
             cout << "Digite a descrição do produto desejado: ";
@@ -397,6 +406,7 @@ void showMenuSearchStock(string **mat, int linhas, int colunas)
                 break;
             }
             getMatLines(mat, mLinhasProd, qtdLinhas, 4, vecLinha);
+            mostrarTabelaCompleta = false;
             break;
         case 'R':
             cout << "Retornando...\n";
@@ -469,7 +479,7 @@ void showMenuAddProd(string **&mProd, int &linhasProd, int colunasProd)
             break;
         }
 
-        addProd(mProd, linhasProd, colunasProd, id, nomeProd, qtdProd, precoProd);
+        addProd(mProd, linhasProd, colunasProd, id, nomeProd, qtdProd, arredondar(stof(precoProd)));
     } while (choice != 'R');
 }
 
@@ -711,7 +721,7 @@ bool showMenuFinalizarVenda(string **&matVenda, int &linhasMatVenda, string **&m
         cout << "                 Talão: \033[0m" << talao << "  \033[32mData e Hora: \033[0m" << dataHora << " \n";
         if (cliente.length() > 0)
         {
-            cout << "       \033[32mNIF Cliente: \033[0m" << cliente << "                  \033[32mNúmero da Sorte: \033[0m" << addZero(nSorte, 3) << "\n";
+            cout << "\033[32mNIF Cliente: \033[0m" << cliente << "                  \033[32mNúmero da Sorte: \033[0m" << addZero(nSorte, 3) << "\n";
         }
         cout << "\033[32mTotal a pagar: \033[0m" << arredondar(subTotal) << "€ \n";
         cout << "\033[32mValor pago: \033[0m" << arredondar(valorPago) << "€ \n";
@@ -1013,7 +1023,7 @@ void prePreencherMatriz(string **mProd, string **mVendas, string **mCompras)
     mProd[1][0] = "1";                // Coluna ID
     mProd[1][1] = "ARROZ CONTINENTE"; // Coluna Descrição
     mProd[1][2] = "10";               // Coluna Quantidade
-    mProd[1][3] = "2";                // Coluna Custo
+    mProd[1][3] = "2.00";                // Coluna Custo
 
     mProd[2][0] = "2";               // Coluna ID
     mProd[2][1] = "MASSA ESPAGUETE"; // Coluna Descrição
@@ -1023,17 +1033,17 @@ void prePreencherMatriz(string **mProd, string **mVendas, string **mCompras)
     mProd[3][0] = "3";        // Coluna ID
     mProd[3][1] = "SALSICHA"; // Coluna Descrição
     mProd[3][2] = "3";        // Coluna Quantidade
-    mProd[3][3] = "1.2";      // Coluna Custo
+    mProd[3][3] = "1.20";      // Coluna Custo
 
     mProd[4][0] = "4";            // Coluna ID
     mProd[4][1] = "CARNE PICADA"; // Coluna Descrição
     mProd[4][2] = "5";            // Coluna Quantidade
-    mProd[4][3] = "5";            // Coluna Custo
+    mProd[4][3] = "5.00";            // Coluna Custo
 
     mProd[5][0] = "5";                // Coluna ID
     mProd[5][1] = "ARROZ PINGO DOCE"; // Coluna Descrição
     mProd[5][2] = "42";               // Coluna Quantidade
-    mProd[5][3] = "1";                // Coluna Custo
+    mProd[5][3] = "1.00";                // Coluna Custo
     //------------------------------------------------------
 
     mVendas[0][0] = "TALAO";      // Talão venda
@@ -1193,11 +1203,11 @@ void showMenuVendas(string **mat, int linhas, int colunas, string **&matProdVend
         cout << "                                    MENU DE VENDAS\033[0m\n";
         cout << endl;
         cout << "               V.VENDER   " << "C. CONSULTAR PRODUTOS DE UMA VENDA  " << "R. RETORNAR\n";
-        cout << "\033[32m======================================================================================\n";
+        cout << "\033[32m======================================================================================\033[0m\n";
         cout << endl;
         printMatrix(mat, linhas, colunas);
         cout << endl;
-        cout << "                          Data e Hora: " << getDateTime() << "\n";
+        cout << "                          \033[32mData e Hora: " << getDateTime() << "\n";
         cout << "======================================================================================\033[0m\n";
         cout << "Escolha uma opção: ";
         cin >> choice;
