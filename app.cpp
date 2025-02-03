@@ -111,11 +111,6 @@ string addZero(int num, int digitos)
         numStr = string(digitos - numStr.size(), '0') + numStr;
     }
     return numStr;
-    // if (num < 10)
-    // {
-    //     return "0" + to_string(num);
-    // }
-    // return to_string(num);
 }
 
 string arredondar(float num)
@@ -880,7 +875,8 @@ bool showMenuFinalizarVenda(string **&matVenda, int &linhasMatVenda, string **&m
         case 'R':
             cout << "Retornando a venda...\n";
             sleep(1);
-            sair = true;
+            sair = false;
+            return true;
             break;
         default:
             cout << "Opção inválida! Tente novamente.\n";
